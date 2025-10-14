@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NovaPay logo">
+  <rect width="128" height="128" rx="24" fill="#0B0F14"/>
+  <g filter="url(#shadow)">
+    <path d="M36 88V40h12l20 28V40h12v48H68L48 60v28H36z" fill="#4FD1C5"/>
+  </g>
+  <defs>
+    <filter id="shadow" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse">
+      <feOffset dy="2"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.2 0"/>
+      <feBlend in2="SourceGraphic" mode="normal"/>
+    </filter>
+  </defs>
+</svg>
