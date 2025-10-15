@@ -1,6 +1,15 @@
+@import './tailwind.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base reset matching snippet */
+@layer base {
+  button, input, select, textarea {
+    @apply appearance-none bg-transparent border-0 outline-none;
+  }
+}
 
 /* Custom NovaPay styles */
 .novapay-gradient {
@@ -13,4 +22,173 @@
 
 .btn-secondary {
   @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors;
+}
+
+/* Typography utilities mapped to Figma tokens */
+@layer utilities {
+  /* Display */
+  .typography-display-bold {
+    font-family: var(--typography-display-bold-font-family);
+    font-size: var(--typography-display-bold-font-size);
+    font-style: var(--typography-display-bold-font-style);
+    font-weight: var(--typography-display-bold-font-weight);
+    letter-spacing: var(--typography-display-bold-letter-spacing);
+    line-height: var(--typography-display-bold-line-height);
+  }
+  .typography-display-medium {
+    font-family: var(--typography-display-medium-font-family);
+    font-size: var(--typography-display-medium-font-size);
+    font-style: var(--typography-display-medium-font-style);
+    font-weight: var(--typography-display-medium-font-weight);
+    letter-spacing: var(--typography-display-medium-letter-spacing);
+    line-height: var(--typography-display-medium-line-height);
+  }
+  .typography-display-regular {
+    font-family: var(--typography-display-regular-font-family);
+    font-size: var(--typography-display-regular-font-size);
+    font-style: var(--typography-display-regular-font-style);
+    font-weight: var(--typography-display-regular-font-weight);
+    letter-spacing: var(--typography-display-regular-letter-spacing);
+    line-height: var(--typography-display-regular-line-height);
+  }
+  .typography-display-semibold {
+    font-family: var(--typography-display-semibold-font-family);
+    font-size: var(--typography-display-semibold-font-size);
+    font-style: var(--typography-display-semibold-font-style);
+    font-weight: var(--typography-display-semibold-font-weight);
+    letter-spacing: var(--typography-display-semibold-letter-spacing);
+    line-height: var(--typography-display-semibold-line-height);
+  }
+
+  /* H1 */
+  .typography-h1-bold {
+    font-family: var(--typography-h1-bold-font-family);
+    font-size: var(--typography-h1-bold-font-size);
+    font-style: var(--typography-h1-bold-font-style);
+    font-weight: var(--typography-h1-bold-font-weight);
+    letter-spacing: var(--typography-h1-bold-letter-spacing);
+    line-height: var(--typography-h1-bold-line-height);
+  }
+  .typography-h1-medium {
+    font-family: var(--typography-h1-medium-font-family);
+    font-size: var(--typography-h1-medium-font-size);
+    font-style: var(--typography-h1-medium-font-style);
+    font-weight: var(--typography-h1-medium-font-weight);
+    letter-spacing: var(--typography-h1-medium-letter-spacing);
+    line-height: var(--typography-h1-medium-line-height);
+  }
+  .typography-h1-regular {
+    font-family: var(--typography-h1-regular-font-family);
+    font-size: var(--typography-h1-regular-font-size);
+    font-style: var(--typography-h1-regular-font-style);
+    font-weight: var(--typography-h1-regular-font-weight);
+    letter-spacing: var(--typography-h1-regular-letter-spacing);
+    line-height: var(--typography-h1-regular-line-height);
+  }
+  .typography-h1-semibold {
+    font-family: var(--typography-h1-semibold-font-family);
+    font-size: var(--typography-h1-semibold-font-size);
+    font-style: var(--typography-h1-semibold-font-style);
+    font-weight: var(--typography-h1-semibold-font-weight);
+    letter-spacing: var(--typography-h1-semibold-letter-spacing);
+    line-height: var(--typography-h1-semibold-line-height);
+  }
+
+  /* H2 */
+  .typography-h2-bold {
+    font-family: var(--typography-h2-bold-font-family);
+    font-size: var(--typography-h2-bold-font-size);
+    font-style: var(--typography-h2-bold-font-style);
+    font-weight: var(--typography-h2-bold-font-weight);
+    letter-spacing: var(--typography-h2-bold-letter-spacing);
+    line-height: var(--typography-h2-bold-line-height);
+  }
+  .typography-h2-medium {
+    font-family: var(--typography-h2-medium-font-family);
+    font-size: var(--typography-h2-medium-font-size);
+    font-style: var(--typography-h2-medium-font-style);
+    font-weight: var(--typography-h2-medium-font-weight);
+    letter-spacing: var(--typography-h2-medium-letter-spacing);
+    line-height: var(--typography-h2-medium-line-height);
+  }
+  .typography-h2-regular {
+    font-family: var(--typography-h2-regular-font-family);
+    font-size: var(--typography-h2-regular-font-size);
+    font-style: var(--typography-h2-regular-font-style);
+    font-weight: var(--typography-h2-regular-font-weight);
+    letter-spacing: var(--typography-h2-regular-letter-spacing);
+    line-height: var(--typography-h2-regular-line-height);
+  }
+  .typography-h2-semibold {
+    font-family: var(--typography-h2-semibold-font-family);
+    font-size: var(--typography-h2-semibold-font-size);
+    font-style: var(--typography-h2-semibold-font-style);
+    font-weight: var(--typography-h2-semibold-font-weight);
+    letter-spacing: var(--typography-h2-semibold-letter-spacing);
+    line-height: var(--typography-h2-semibold-line-height);
+  }
+
+  /* H3 */
+  .typography-h3-bold {
+    font-family: var(--typography-h3-bold-font-family);
+    font-size: var(--typography-h3-bold-font-size);
+    font-style: var(--typography-h3-bold-font-style);
+    font-weight: var(--typography-h3-bold-font-weight);
+    letter-spacing: var(--typography-h3-bold-letter-spacing);
+    line-height: var(--typography-h3-bold-line-height);
+  }
+  .typography-h3-medium {
+    font-family: var(--typography-h3-medium-font-family);
+    font-size: var(--typography-h3-medium-font-size);
+    font-style: var(--typography-h3-medium-font-style);
+    font-weight: var(--typography-h3-medium-font-weight);
+    letter-spacing: var(--typography-h3-medium-letter-spacing);
+    line-height: var(--typography-h3-medium-line-height);
+  }
+  .typography-h3-regular {
+    font-family: var(--typography-h3-regular-font-family);
+    font-size: var(--typography-h3-regular-font-size);
+    font-style: var(--typography-h3-regular-font-style);
+    font-weight: var(--typography-h3-regular-font-weight);
+    letter-spacing: var(--typography-h3-regular-letter-spacing);
+    line-height: var(--typography-h3-regular-line-height);
+  }
+  .typography-h3-semibold {
+    font-family: var(--typography-h3-semibold-font-family);
+    font-size: var(--typography-h3-semibold-font-size);
+    font-style: var(--typography-h3-semibold-font-style);
+    font-weight: var(--typography-h3-semibold-font-weight);
+    letter-spacing: var(--typography-h3-semibold-letter-spacing);
+    line-height: var(--typography-h3-semibold-line-height);
+  }
+
+  /* H4 */
+  .typography-h4-bold { font-family: var(--typography-h4-bold-font-family); font-size: var(--typography-h4-bold-font-size); font-style: var(--typography-h4-bold-font-style); font-weight: var(--typography-h4-bold-font-weight); letter-spacing: var(--typography-h4-bold-letter-spacing); line-height: var(--typography-h4-bold-line-height); }
+  .typography-h4-medium { font-family: var(--typography-h4-medium-font-family); font-size: var(--typography-h4-medium-font-size); font-style: var(--typography-h4-medium-font-style); font-weight: var(--typography-h4-medium-font-weight); letter-spacing: var(--typography-h4-medium-letter-spacing); line-height: var(--typography-h4-medium-line-height); }
+  .typography-h4-regular { font-family: var(--typography-h4-regular-font-family); font-size: var(--typography-h4-regular-font-size); font-style: var(--typography-h4-regular-font-style); font-weight: var(--typography-h4-regular-font-weight); letter-spacing: var(--typography-h4-regular-letter-spacing); line-height: var(--typography-h4-regular-line-height); }
+  .typography-h4-semibold { font-family: var(--typography-h4-semibold-font-family); font-size: var(--typography-h4-semibold-font-size); font-style: var(--typography-h4-semibold-font-style); font-weight: var(--typography-h4-semibold-font-weight); letter-spacing: var(--typography-h4-semibold-letter-spacing); line-height: var(--typography-h4-semibold-line-height); }
+
+  /* H5 */
+  .typography-h5-bold { font-family: var(--typography-h5-bold-font-family); font-size: var(--typography-h5-bold-font-size); font-style: var(--typography-h5-bold-font-style); font-weight: var(--typography-h5-bold-font-weight); letter-spacing: var(--typography-h5-bold-letter-spacing); line-height: var(--typography-h5-bold-line-height); }
+  .typography-h5-medium { font-family: var(--typography-h5-medium-font-family); font-size: var(--typography-h5-medium-font-size); font-style: var(--typography-h5-medium-font-style); font-weight: var(--typography-h5-medium-font-weight); letter-spacing: var(--typography-h5-medium-letter-spacing); line-height: var(--typography-h5-medium-line-height); }
+  .typography-h5-regular { font-family: var(--typography-h5-regular-font-family); font-size: var(--typography-h5-regular-font-size); font-style: var(--typography-h5-regular-font-style); font-weight: var(--typography-h5-regular-font-weight); letter-spacing: var(--typography-h5-regular-letter-spacing); line-height: var(--typography-h5-regular-line-height); }
+  .typography-h5-semibold { font-family: var(--typography-h5-semibold-font-family); font-size: var(--typography-h5-semibold-font-size); font-style: var(--typography-h5-semibold-font-style); font-weight: var(--typography-h5-semibold-font-weight); letter-spacing: var(--typography-h5-semibold-letter-spacing); line-height: var(--typography-h5-semibold-line-height); }
+
+  /* H6 */
+  .typography-h6-bold { font-family: var(--typography-h6-bold-font-family); font-size: var(--typography-h6-bold-font-size); font-style: var(--typography-h6-bold-font-style); font-weight: var(--typography-h6-bold-font-weight); letter-spacing: var(--typography-h6-bold-letter-spacing); line-height: var(--typography-h6-bold-line-height); }
+  .typography-h6-medium { font-family: var(--typography-h6-medium-font-family); font-size: var(--typography-h6-medium-font-size); font-style: var(--typography-h6-medium-font-style); font-weight: var(--typography-h6-medium-font-weight); letter-spacing: var(--typography-h6-medium-letter-spacing); line-height: var(--typography-h6-medium-line-height); }
+  .typography-h6-regular { font-family: var(--typography-h6-regular-font-family); font-size: var(--typography-h6-regular-font-size); font-style: var(--typography-h6-regular-font-style); font-weight: var(--typography-h6-regular-font-weight); letter-spacing: var(--typography-h6-regular-letter-spacing); line-height: var(--typography-h6-regular-line-height); }
+  .typography-h6-semibold { font-family: var(--typography-h6-semibold-font-family); font-size: var(--typography-h6-semibold-font-size); font-style: var(--typography-h6-semibold-font-style); font-weight: var(--typography-h6-semibold-font-weight); letter-spacing: var(--typography-h6-semibold-letter-spacing); line-height: var(--typography-h6-semibold-line-height); }
+
+  /* Label */
+  .typography-label-bold { font-family: var(--typography-label-bold-font-family); font-size: var(--typography-label-bold-font-size); font-style: var(--typography-label-bold-font-style); font-weight: var(--typography-label-bold-font-weight); letter-spacing: var(--typography-label-bold-letter-spacing); line-height: var(--typography-label-bold-line-height); }
+  .typography-label-medium { font-family: var(--typography-label-medium-font-family); font-size: var(--typography-label-medium-font-size); font-style: var(--typography-label-medium-font-style); font-weight: var(--typography-label-medium-font-weight); letter-spacing: var(--typography-label-medium-letter-spacing); line-height: var(--typography-label-medium-line-height); }
+  .typography-label-regular { font-family: var(--typography-label-regular-font-family); font-size: var(--typography-label-regular-font-size); font-style: var(--typography-label-regular-font-style); font-weight: var(--typography-label-regular-font-weight); letter-spacing: var(--typography-label-regular-letter-spacing); line-height: var(--typography-label-regular-line-height); }
+  .typography-label-semibold { font-family: var(--typography-label-semibold-font-family); font-size: var(--typography-label-semibold-font-size); font-style: var(--typography-label-semibold-font-style); font-weight: var(--typography-label-semibold-font-weight); letter-spacing: var(--typography-label-semibold-letter-spacing); line-height: var(--typography-label-semibold-line-height); }
+
+  /* Body example */
+  .typography-body-medium-medium { font-family: var(--body-medium-medium-font-family); font-size: var(--body-medium-medium-font-size); font-style: var(--body-medium-medium-font-style); font-weight: var(--body-medium-medium-font-weight); letter-spacing: var(--body-medium-medium-letter-spacing); line-height: var(--body-medium-medium-line-height); }
+
+  /* Helper */
+  .all-\[unset\] { all: unset; }
 }

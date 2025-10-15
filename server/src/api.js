@@ -1,5 +1,5 @@
 // src/api.js
-const API_BASE = "http://127.0.0.1:4000";
+const API_BASE = "http://localhost:4000";
 let token = null;
 
 export function setToken(t){ token = t; localStorage.setItem("nv_token", t); }

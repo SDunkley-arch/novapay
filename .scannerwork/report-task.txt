@@ -1,0 +1,7 @@
+organization=sdunkley-arch
+projectKey=SDunkley-arch_novapay
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.68631
+dashboardUrl=https://sonarcloud.io/dashboard?id=SDunkley-arch_novapay
+ceTaskId=AZnkm7yu7rXcQ1_iL-lc
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZnkm7yu7rXcQ1_iL-lc

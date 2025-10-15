@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -13,13 +13,13 @@ model User {
   password  String
   createdAt DateTime  @default(now())
   balance   Balance?
-  txs       Transaction[]
+  transactions Transaction[]
 }
 
 model Balance {
   id     Int  @id @default(autoincrement())
-  jmd    Int  @default(12500000) // cents: 125,000.00 JMD
-  usd    Int  @default(18000)    // cents: 180.00 USD
+  jmd    Int  @default(12500000) // cents: 125,000.00 JMD (in cents)
+  usd    Int  @default(18000)    // cents: 180.00 USD (in cents)
   userId Int  @unique
   user   User @relation(fields: [userId], references: [id])
 }

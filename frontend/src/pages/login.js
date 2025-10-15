@@ -97,12 +97,15 @@ export function renderLogin() {
       showToast('Welcome back!', 'success');
       navigate('/dashboard');
     } catch (err) {
-      // Show server error codes if present
-      const code = err?.error?.code || 'LOGIN_FAILED';
+      // Enhanced error extraction and user-friendly messages
+      const code = err?.error?.code || err?.message || 'LOGIN_FAILED';
       const msg =
         code === 'BAD_CRED' ? 'Invalid email or password'
         : code === 'NO_USER' ? 'Account not found'
+        : code === 'NO_AUTH' ? 'Session expired, please log in again'
         : 'Unable to sign in';
+      
+      console.error('Login Error:', err);
       showToast(msg, 'error');
     } finally {
       btn.textContent = 'Sign In';
