@@ -1,6 +1,6 @@
 {
   "appId": "com.novapay.app",
-  "appName": "novapay Ja",
+  "appName": "NovaPay Ja",
   "webDir": "frontend/dist",
   "bundledWebRuntime": false
 }

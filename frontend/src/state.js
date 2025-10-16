@@ -143,9 +143,17 @@ export function addBiller(biller) {
 
 export function clearSession() {
   try {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    console.log('[NovaPay] Session cleared');
+    // Reset in-memory state
+    state.session = null;
+    state.balances = { JMD: 0, USD: 0 };
+    state.txs = [];
+    state.savedBillers = [];
+    state.card = { hasCard: false, masked: '', expiry: '', frozen: false };
+
+    // Clear all persistent data
+    clearStorage();
+
+    console.log('[NovaPay] Session cleared successfully');
   } catch (err) {
     console.error('[NovaPay] Failed to clear session:', err);
   }
