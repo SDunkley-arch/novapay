@@ -9,46 +9,90 @@ export function renderLogin() {
   const app = qs('#app');
   
   app.innerHTML = `
-    <div class="container page">
-      <div class="page-header">
-        <button class="back-btn" data-testid="btnBack">←</button>
-        <h1 class="page-title">Sign In</h1>
-        <div></div>
+    <div class="auth-container">
+      <!-- Header -->
+      <div class="auth-header">
+        <button class="icon-btn" data-testid="btnBack">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
       </div>
-      
-      <div class="card-lg">
-        <form id="loginForm">
-          <div class="form-group">
+
+      <!-- Content -->
+      <div class="auth-content">
+        <!-- Logo & Title -->
+        <div class="auth-brand">
+          <div class="auth-logo">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <rect width="48" height="48" rx="12" fill="url(#gradient)"/>
+              <path d="M24 14v20M14 24h20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="48" y2="48">
+                  <stop offset="0%" stop-color="#543AF8"/>
+                  <stop offset="100%" stop-color="#9333EA"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h1 class="auth-title">Welcome Back</h1>
+          <p class="auth-subtitle">Sign in to continue to NovaPay</p>
+        </div>
+
+        <!-- Form -->
+        <form id="loginForm" class="auth-form">
+          <div class="form-field">
             <label class="form-label" for="email">Email Address</label>
-            <input 
-              type="email" 
-              id="email" 
-              class="form-input" 
-              placeholder="Enter your email"
-              required
-            >
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input 
+                type="email" 
+                id="email" 
+                class="form-input-modern" 
+                placeholder="your@email.com"
+                required
+              >
+            </div>
           </div>
           
-          <div class="form-group">
+          <div class="form-field">
             <label class="form-label" for="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              class="form-input" 
-              placeholder="Enter your password"
-              required
-            >
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input 
+                type="password" 
+                id="password" 
+                class="form-input-modern" 
+                placeholder="Enter your password"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="rememberMe">
+              <span class="checkbox-label">Remember me</span>
+            </label>
+            <a href="#" class="link-text" id="forgotPassword">Forgot password?</a>
           </div>
           
-          <button type="submit" class="btn btn-primary btn-full" data-testid="btnLogin">
+          <button type="submit" class="btn-primary-modern" data-testid="btnLogin">
             Sign In
           </button>
         </form>
         
-        <div class="text-center mt-6">
-          <p class="text-muted text-sm">
+        <!-- Footer -->
+        <div class="auth-footer">
+          <p class="auth-footer-text">
             Don't have an account? 
-            <a href="#/register" class="text-accent">Create one</a>
+            <a href="#/register" class="link-primary">Sign up</a>
           </p>
         </div>
       </div>
@@ -56,15 +100,15 @@ export function renderLogin() {
   `;
   
   // Event listeners
-  // Header back (history-aware)
-  on(app, '[data-testid="btnBack"]', 'click', () => {
-    if (history.length > 1) {
-      history.back();
-    } else {
-      navigate('/dashboard');
-    }
+  on('click', '[data-testid="btnBack"]', () => {
+    navigate('/landing');
   });
-  on(app, '#loginForm', 'submit', async (e) => {
+  
+  on('click', '#forgotPassword', (e) => {
+    e.preventDefault();
+    showToast('Password reset coming soon', 'info');
+  });
+  on('submit', '#loginForm', async (e) => {
     e.preventDefault();
   
     const email = qs('#email').value.trim();

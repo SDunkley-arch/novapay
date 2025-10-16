@@ -1,128 +1,140 @@
-// Hash-based router for NovaPay
+// NovaPay Hash Router — Frontend Routing System
 import { isLoggedIn } from './state.js';
-import { renderLogin } from './pages/login.js'; 
-import { renderRegister } from './pages/register.js'; 
-import { renderDashboard } from './pages/dashboard.js'; 
-import { renderLanding } from './pages/landing.js'; 
+import { renderLogin } from './pages/login.js';
+import { renderRegister } from './pages/register.js';
+import { renderDashboard } from './pages/dashboard.js';
+import { renderLanding } from './pages/landing.js';
 import { renderTransfer } from './pages/transfer.js';
 import { renderAddMoney } from './pages/add-money.js';
 import { renderBills } from './pages/bills.js';
 import { renderWithdraw } from './pages/withdraw.js';
 import { renderCard } from './pages/card.js';
 import { renderProfile } from './pages/profile.js';
+import { renderTransactions } from './pages/transactions.js';
+import { renderKYC } from './pages/kyc.js';
+import { renderSettings } from './pages/settings.js';
+
 class Router {
   constructor() {
     this.routes = new Map();
     this.currentRoute = null;
-    this.defaultRoute = null;
-    this.authRoute = null;
-    
-    // Listen for hash changes and initial load
+    this.defaultRoute = '/login';
+    this.authRoute = '/dashboard';
+
+    // Bind event handlers
     window.addEventListener('hashchange', () => this.handleRoute());
     window.addEventListener('load', () => this.handleRoute());
+
+    console.log('[Router] Initialized hash-based routing system ✅');
   }
-  
+
   // Register a route
   addRoute(path, handler, requiresAuth = false) {
     this.routes.set(path, { handler, requiresAuth });
   }
-  
-  // Set default routes
+
+  // Set default (public) and auth (protected) routes
   setDefaults(defaultRoute, authRoute) {
     this.defaultRoute = defaultRoute;
     this.authRoute = authRoute;
   }
-  
-  // Navigate to a route
+
+  // Navigation helpers
   navigate(path) {
-    window.location.hash = path;
+    if (window.location.hash !== `#${path}`) {
+      window.location.hash = path;
+    } else {
+      this.handleRoute(); // Re-render if same hash
+    }
   }
-  
-  // True redirect without adding a history entry
+
   redirect(path) {
     window.location.replace(`#${path}`);
   }
-  
-  // Get current hash without #
-  getCurrentHash() {
-    return window.location.hash.slice(1) || '';
-  }
-  
-  // Handle route changes
-  handleRoute() {
-    const hash = this.getCurrentHash();
-    let route = this.routes.get(hash);
-    
-    // If route doesn't exist, use defaults
-    if (!route) {
-      const targetRoute = isLoggedIn() ? this.authRoute : this.defaultRoute;
-      if (targetRoute && hash !== targetRoute) {
-        this.redirect(targetRoute);
-        return;
-      }
-      route = this.routes.get(targetRoute);
-    }
-    
-    // Check authentication
-    if (route && route.requiresAuth && !isLoggedIn()) {
-      this.redirect(this.defaultRoute);
-      return;
-    }
-    
-    // If logged in and trying to access public routes, redirect to dashboard
-    if (route && !route.requiresAuth && isLoggedIn() && 
-        (hash === '/landing' || hash === '/login' || hash === '/register')) {
-      this.redirect(this.authRoute);
-      return;
-    }
-    
-    // Execute route handler
-    if (route && route.handler) {
-      this.currentRoute = hash;
-      route.handler();
-    } else {
-      console.warn(`No handler found for route: ${hash}`);
-    }
-  }
-  
-  // Get current route
-  getCurrentRoute() {
-    return this.currentRoute;
-  }
-  
-  // Go back
+
   goBack() {
     window.history.back();
   }
+
+  // Extract current route (without the leading #)
+  getCurrentHash() {
+    return window.location.hash.slice(1) || '';
+  }
+
+  // Route handler
+  handleRoute() {
+    const hash = this.getCurrentHash();
+    console.log(`[Router] Handling route: ${hash || '(none)'}`);
+
+    let route = this.routes.get(hash);
+
+    // If route not found → redirect to defaults
+    if (!route) {
+      const fallback = isLoggedIn() ? this.authRoute : this.defaultRoute;
+      console.warn(`[Router] Unknown route "${hash}". Redirecting to: ${fallback}`);
+      this.redirect(fallback);
+      return;
+    }
+
+    // Auth checks
+    if (route.requiresAuth && !isLoggedIn()) {
+      console.warn(`[Router] Protected route "${hash}" blocked — user not logged in`);
+      this.redirect(this.defaultRoute);
+      return;
+    }
+
+    if (!route.requiresAuth && isLoggedIn() &&
+        (hash === '/login' || hash === '/register' || hash === '/landing')) {
+      console.log(`[Router] User logged in, redirecting from public route "${hash}" to dashboard`);
+      this.redirect(this.authRoute);
+      return;
+    }
+
+    // Execute the route handler
+    try {
+      console.log(`[Router] Rendering route: ${hash}`);
+      const mount = document.getElementById('app');
+      if (mount) mount.innerHTML = ''; // Clear old content
+      route.handler();
+      this.currentRoute = hash;
+    } catch (err) {
+      console.error(`[Router] Error rendering route "${hash}":`, err);
+      const mount = document.getElementById('app');
+      if (mount) {
+        mount.innerHTML = `
+          <div style="padding:20px;color:#fff;background:#111;text-align:center;">
+            <h3>🚨 Rendering Error</h3>
+            <p>${err.message}</p>
+          </div>`;
+      }
+    }
+  }
 }
 
-// Create and export router instance
+// Instantiate router
 export const router = new Router();
 
-// Navigation helpers
-export function navigate(path) {
-  router.navigate(path);
-}
+// Expose helpers for easy navigation
+export function navigate(path) { router.navigate(path); }
+export function redirect(path) { router.redirect(path); }
+export function goBack() { router.goBack(); }
 
-export function redirect(path) {
-  router.redirect(path);
-}
-
-export function goBack() {
-  router.goBack();
-}
-
-// Register routes
+// Route Registration
 router.addRoute('/login', renderLogin);
 router.addRoute('/register', renderRegister);
 router.addRoute('/landing', renderLanding);
-router.addRoute('/dashboard', renderDashboard, true); // true = requiresAuth
+router.addRoute('/dashboard', renderDashboard, true);
 router.addRoute('/transfers', renderTransfer, true);
 router.addRoute('/add-money', renderAddMoney, true);
 router.addRoute('/bills', renderBills, true);
 router.addRoute('/withdraw', renderWithdraw, true);
 router.addRoute('/card', renderCard, true);
 router.addRoute('/profile', renderProfile, true);
+router.addRoute('/transactions', renderTransactions, true);
+router.addRoute('/kyc', renderKYC, true);
+router.addRoute('/settings', renderSettings, true);
 
-// Set defaults: first arg = default (public), second = requires auth
+// Defaults
 router.setDefaults('/login', '/dashboard');
+
+console.log('[Router] Routes registered:', Array.from(router.routes.keys()));

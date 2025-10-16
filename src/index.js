@@ -14,7 +14,15 @@ import billRoutes from './routes/bills.js';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001'
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
@@ -32,6 +40,6 @@ app.use('/wallet', walletRoutes);
 app.use('/transfers', transferRoutes);
 app.use('/bills', billRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 console.log("JWT Secret exists:", !!process.env.JWT_SECRET);
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

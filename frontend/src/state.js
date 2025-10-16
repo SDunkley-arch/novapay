@@ -141,5 +141,15 @@ export function addBiller(biller) {
   }
 }
 
+export function clearSession() {
+  try {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    console.log('[NovaPay] Session cleared');
+  } catch (err) {
+    console.error('[NovaPay] Failed to clear session:', err);
+  }
+}
+
 // Initialize state on module load
 load();
