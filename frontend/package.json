@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:android": "vite build --mode android",
     "preview": "vite preview",
     "build:css": "tailwindcss -c tailwind.config.js -i ./src/tailwind.css -o ./dist/tailwind.css --minify",
-    "android": "npm run build && npx cap sync android && npx cap open android"
+    "android": "npm run build:android && npx cap sync android && npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.3"

@@ -209,61 +209,29 @@ export function renderProfile() {
 }
 
 function setupProfileListeners() {
-  const app = qs('#app');
-  
+  const app = document.querySelector('#app');
+
   // Header back
   on(app, '[data-action="nav-back"]', 'click', () => safeBack('/dashboard'));
-  
-  // Complete KYC
-  on(app, '#completeKyc', 'click', () => {
-    showToast('KYC verification process coming soon!', 'info');
-  });
-  
-  // Enable Biometric
-  on(app, '#enableBiometric', 'click', () => {
-    showToast('Biometric authentication coming soon!', 'info');
-  });
-  
-  // Change PIN
-  on(app, '#changePin', 'click', () => {
-    showToast('Change PIN feature coming soon!', 'info');
-  });
-  
-  // Notifications
-  on(app, '#notifications', 'click', () => {
-    showToast('Notification settings coming soon!', 'info');
-  });
-  
-  // Privacy & Security
-  on(app, '#privacy', 'click', () => {
-    showToast('Privacy settings coming soon!', 'info');
-  });
-  
-  // Help Center
-  on(app, '#helpCenter', 'click', () => {
-    showToast('Help Center coming soon!', 'info');
-  });
-  
-  // Contact Support
-  on(app, '#contactSupport', 'click', () => {
-    showToast('Support chat coming soon!', 'info');
-  });
-  
-  // Send Feedback
-  on(app, '#feedback', 'click', () => {
-    showToast('Feedback form coming soon!', 'info');
-  });
-  
-  // Terms of Service
-  on(app, '#terms', 'click', () => {
-    showToast('Terms of Service coming soon!', 'info');
-  });
-  
-  // Privacy Policy
-  on(app, '#privacy-policy', 'click', () => {
-    showToast('Privacy Policy coming soon!', 'info');
-  });
-  
+
+  // Coming soon actions
+  const infoMessages = {
+    '#completeKyc': 'KYC verification process coming soon!',
+    '#enableBiometric': 'Biometric authentication coming soon!',
+    '#changePin': 'Change PIN feature coming soon!',
+    '#notifications': 'Notification settings coming soon!',
+    '#privacy': 'Privacy settings coming soon!',
+    '#helpCenter': 'Help Center coming soon!',
+    '#contactSupport': 'Support chat coming soon!',
+    '#feedback': 'Feedback form coming soon!',
+    '#terms': 'Terms of Service coming soon!',
+    '#privacy-policy': 'Privacy Policy coming soon!'
+  };
+
+  for (const [selector, msg] of Object.entries(infoMessages)) {
+    on(app, selector, 'click', () => showToast(msg, 'info'));
+  }
+
   // Logout
   on(app, '[data-testid="btnLogout"]', 'click', () => {
     if (confirm('Are you sure you want to sign out?')) {

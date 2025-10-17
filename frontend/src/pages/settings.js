@@ -232,17 +232,21 @@ export function renderSettings() {
   `;
 
   // Event listeners
-  on('click', '#btnBack', () => goBack());
-  on('click', '#btnEditProfile', () => navigate('/profile'));
-  on('click', '#btnProfile', () => navigate('/profile'));
-  on('click', '#btnKYC', () => navigate('/kyc'));
-  on('click', '#btnSecurity', () => showToast('Security settings coming soon', 'info'));
-  on('click', '#btnLanguage', () => showToast('Language settings coming soon', 'info'));
-  on('click', '#btnHelp', () => showToast('Help center coming soon', 'info'));
-  on('click', '#btnTerms', () => showToast('Terms & Privacy coming soon', 'info'));
-  on('click', '#btnAbout', () => showToast('NovaPay v1.0.0 - Modern Digital Wallet', 'info'));
-  
-  on('click', '#btnLogout', () => {
+  const root = document.querySelector('#app');
+
+  // Navigation & actions
+  on(root, '#btnBack', 'click', () => goBack());
+  on(root, '#btnEditProfile', 'click', () => navigate('/edit-profile'));
+  on(root, '#btnProfile', 'click', () => navigate('/personal-info'));
+  on(root, '#btnKYC', 'click', () => navigate('/kyc'));
+  on(root, '#btnSecurity', 'click', () => showToast('Security settings coming soon', 'info'));
+  on(root, '#btnLanguage', 'click', () => showToast('Language settings coming soon', 'info'));
+  on(root, '#btnHelp', 'click', () => showToast('Help center coming soon', 'info'));
+  on(root, '#btnTerms', 'click', () => showToast('Terms & Privacy coming soon', 'info'));
+  on(root, '#btnAbout', 'click', () => showToast('NovaPay v1.0.0 - Modern Digital Wallet', 'info'));
+
+  // Logout
+  on(root, '#btnLogout', 'click', () => {
     if (confirm('Are you sure you want to log out?')) {
       clearSession();
       showToast('Logged out successfully', 'success');
@@ -251,7 +255,7 @@ export function renderSettings() {
   });
 
   // Toggle switches
-  on('change', '#toggleNotifications', (e) => {
+  on(root, '#toggleNotifications', 'change', (e) => {
     const enabled = e.target.checked;
     showToast(`Notifications ${enabled ? 'enabled' : 'disabled'}`, 'success');
   });
@@ -263,6 +267,6 @@ function escapeHtml(s) {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    '\'': '&#39;'
+    "'": '&#39;'
   }[m]));
 }

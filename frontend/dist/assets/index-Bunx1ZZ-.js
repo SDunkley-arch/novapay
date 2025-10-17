@@ -1,4 +1,4 @@
-(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const a of document.querySelectorAll('link[rel="modulepreload"]'))n(a);new MutationObserver(a=>{for(const l of a)if(l.type==="childList")for(const c of l.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&n(c)}).observe(document,{childList:!0,subtree:!0});function i(a){const l={};return a.integrity&&(l.integrity=a.integrity),a.referrerPolicy&&(l.referrerPolicy=a.referrerPolicy),a.crossOrigin==="use-credentials"?l.credentials="include":a.crossOrigin==="anonymous"?l.credentials="omit":l.credentials="same-origin",l}function n(a){if(a.ep)return;a.ep=!0;const l=i(a);fetch(a.href,l)}})();const J="http://localhost:4000";let f=null;function A(t){f=t,localStorage.setItem("nv_token",t)}function V(){const t=localStorage.getItem("nv_token");t&&(f=t)}function O(){f=null,localStorage.removeItem("nv_token")}function _(t={}){const e={"Content-Type":"application/json",...t};return f?{...e,Authorization:`Bearer ${f}`}:e}async function x(t,e={}){const i=await fetch(`${J}${t}`,{...e,headers:_(e.headers||{})});let n=null;try{n=await i.clone().json()}catch{n=null}if(i.status===401)throw O(),window.location.hash="#/login",new Error("Unauthorized");if(!i.ok)throw n||new Error(`HTTP ${i.status}`);return n}const o={session:null,balances:{JMD:125e3,USD:180},txs:[{id:"t1",title:"From John",amount:7500,currency:"JMD",type:"P2P_RECV",ts:"2025-09-01"},{id:"t2",title:"JPS Bill",amount:-8500,currency:"JMD",type:"BILL",ts:"2025-09-02"}],savedBillers:[],card:{hasCard:!1,masked:"•••• 1234",expiry:"12/28",frozen:!1}},m={SESSION:"novapay_session",BALANCES:"novapay_balances",TRANSACTIONS:"novapay_transactions",BILLERS:"novapay_billers",CARD:"novapay_card"};function U(){try{const t=localStorage.getItem(m.SESSION);t&&(o.session=JSON.parse(t));const e=localStorage.getItem(m.BALANCES);e&&(o.balances=JSON.parse(e));const i=localStorage.getItem(m.TRANSACTIONS);i&&(o.txs=JSON.parse(i));const n=localStorage.getItem(m.BILLERS);n&&(o.savedBillers=JSON.parse(n));const a=localStorage.getItem(m.CARD);a&&(o.card=JSON.parse(a))}catch(t){console.error("Error loading state:",t)}}function I(){try{o.session?localStorage.setItem(m.SESSION,JSON.stringify(o.session)):localStorage.removeItem(m.SESSION),localStorage.setItem(m.BALANCES,JSON.stringify(o.balances)),localStorage.setItem(m.TRANSACTIONS,JSON.stringify(o.txs)),localStorage.setItem(m.BILLERS,JSON.stringify(o.savedBillers)),localStorage.setItem(m.CARD,JSON.stringify(o.card))}catch(t){console.error("Error saving state:",t)}}function q(){Object.values(m).forEach(t=>{localStorage.removeItem(t)})}function k(){return o.session!==null}function j(){try{o.session=null,o.balances={JMD:0,USD:0},o.txs=[],o.savedBillers=[],o.card={hasCard:!1,masked:"",expiry:"",frozen:!1},q(),console.log("[NovaPay] Session cleared successfully")}catch(t){console.error("[NovaPay] Failed to clear session:",t)}}U();function r(t){return document.querySelector(t)}function s(t,e,i){const n=document.querySelector(e);n&&n.addEventListener(t,i)}function u(t){alert(t)}function W(){const t=r("#app");t.innerHTML=`
+(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const a of document.querySelectorAll('link[rel="modulepreload"]'))n(a);new MutationObserver(a=>{for(const l of a)if(l.type==="childList")for(const c of l.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&n(c)}).observe(document,{childList:!0,subtree:!0});function i(a){const l={};return a.integrity&&(l.integrity=a.integrity),a.referrerPolicy&&(l.referrerPolicy=a.referrerPolicy),a.crossOrigin==="use-credentials"?l.credentials="include":a.crossOrigin==="anonymous"?l.credentials="omit":l.credentials="same-origin",l}function n(a){if(a.ep)return;a.ep=!0;const l=i(a);fetch(a.href,l)}})();const I=/Android/i.test(navigator.userAgent),O=location.hostname==="localhost"||location.hostname==="127.0.0.1";let k="http://localhost:4000";I&&(k="http://10.0.2.2:4000");!O&&!I&&(k="http://192.168.0.6:4000");k="http://localhost:4000";const _=k;let f=null;function L(t){f=t,localStorage.setItem("nv_token",t)}function U(){const t=localStorage.getItem("nv_token");t&&(f=t)}function q(){f=null,localStorage.removeItem("nv_token")}function j(t={}){const e={"Content-Type":"application/json",...t};return f?{...e,Authorization:`Bearer ${f}`}:e}async function x(t,e={}){const i=await fetch(`${_}${t}`,{...e,headers:j(e.headers||{})});let n=null;try{n=await i.clone().json()}catch{n=null}if(i.status===401)throw q(),window.location.hash="#/login",new Error("Unauthorized");if(!i.ok)throw n||new Error(`HTTP ${i.status}`);return n}const o={session:null,balances:{JMD:125e3,USD:180},txs:[{id:"t1",title:"From John",amount:7500,currency:"JMD",type:"P2P_RECV",ts:"2025-09-01"},{id:"t2",title:"JPS Bill",amount:-8500,currency:"JMD",type:"BILL",ts:"2025-09-02"}],savedBillers:[],card:{hasCard:!1,masked:"•••• 1234",expiry:"12/28",frozen:!1}},m={SESSION:"novapay_session",BALANCES:"novapay_balances",TRANSACTIONS:"novapay_transactions",BILLERS:"novapay_billers",CARD:"novapay_card"};function W(){try{const t=localStorage.getItem(m.SESSION);t&&(o.session=JSON.parse(t));const e=localStorage.getItem(m.BALANCES);e&&(o.balances=JSON.parse(e));const i=localStorage.getItem(m.TRANSACTIONS);i&&(o.txs=JSON.parse(i));const n=localStorage.getItem(m.BILLERS);n&&(o.savedBillers=JSON.parse(n));const a=localStorage.getItem(m.CARD);a&&(o.card=JSON.parse(a))}catch(t){console.error("Error loading state:",t)}}function D(){try{o.session?localStorage.setItem(m.SESSION,JSON.stringify(o.session)):localStorage.removeItem(m.SESSION),localStorage.setItem(m.BALANCES,JSON.stringify(o.balances)),localStorage.setItem(m.TRANSACTIONS,JSON.stringify(o.txs)),localStorage.setItem(m.BILLERS,JSON.stringify(o.savedBillers)),localStorage.setItem(m.CARD,JSON.stringify(o.card))}catch(t){console.error("Error saving state:",t)}}function z(){Object.values(m).forEach(t=>{localStorage.removeItem(t)})}function w(){return o.session!==null}function Y(){try{o.session=null,o.balances={JMD:0,USD:0},o.txs=[],o.savedBillers=[],o.card={hasCard:!1,masked:"",expiry:"",frozen:!1},z(),console.log("[NovaPay] Session cleared successfully")}catch(t){console.error("[NovaPay] Failed to clear session:",t)}}W();function r(t){return document.querySelector(t)}function s(t,e,i){const n=document.querySelector(e);n&&n.addEventListener(t,i)}function u(t){alert(t)}function G(){const t=r("#app");t.innerHTML=`
     <div class="auth-container">
       <!-- Header -->
       <div class="auth-header">
@@ -87,7 +87,7 @@
         </div>
       </div>
     </div>
-  `,s("click",'[data-testid="btnBack"]',()=>{h("/landing")}),s("click","#forgotPassword",e=>{e.preventDefault(),u("Password reset coming soon")}),s("submit","#loginForm",async e=>{var l;e.preventDefault();const i=r("#email").value.trim(),n=r("#password").value;if(!i){u("Please enter your email address");return}if(!n){u("Please enter your password");return}const a=r('[data-testid="btnLogin"]');a.textContent="Signing In...",a.disabled=!0;try{const c=await x("/auth/login",{method:"POST",body:JSON.stringify({email:i,password:n})});A(c.token),o.session={user:{email:c.user.email,id:c.user.id},kycTier:"TIER_1"},I(),u("Welcome back!","success"),h("/dashboard")}catch(c){const v=((l=c==null?void 0:c.error)==null?void 0:l.code)||(c==null?void 0:c.message)||"LOGIN_FAILED",d=v==="BAD_CRED"?"Invalid email or password":v==="NO_USER"?"Account not found":v==="NO_AUTH"?"Session expired, please log in again":"Unable to sign in";console.error("Login Error:",c),u(d)}finally{a.textContent="Sign In",a.disabled=!1}})}function z(){const t=r("#app");t.innerHTML=`
+  `,s("click",'[data-testid="btnBack"]',()=>{h("/landing")}),s("click","#forgotPassword",e=>{e.preventDefault(),u("Password reset coming soon")}),s("submit","#loginForm",async e=>{var l;e.preventDefault();const i=r("#email").value.trim(),n=r("#password").value;if(!i){u("Please enter your email address");return}if(!n){u("Please enter your password");return}const a=r('[data-testid="btnLogin"]');a.textContent="Signing In...",a.disabled=!0;try{const c=await x("/auth/login",{method:"POST",body:JSON.stringify({email:i,password:n})});L(c.token),o.session={user:{email:c.user.email,id:c.user.id},kycTier:"TIER_1"},D(),u("Welcome back!","success"),h("/dashboard")}catch(c){const v=((l=c==null?void 0:c.error)==null?void 0:l.code)||(c==null?void 0:c.message)||"LOGIN_FAILED",d=v==="BAD_CRED"?"Invalid email or password":v==="NO_USER"?"Account not found":v==="NO_AUTH"?"Session expired, please log in again":"Unable to sign in";console.error("Login Error:",c),u(d)}finally{a.textContent="Sign In",a.disabled=!1}})}function K(){const t=r("#app");t.innerHTML=`
     <div class="auth-container">
       <!-- Header -->
       <div class="auth-header">
@@ -207,7 +207,7 @@
         </div>
       </div>
     </div>
-  `,s("click",'[data-testid="btnBack"]',()=>{h("/landing")}),s("submit","#registerForm",async e=>{var v;e.preventDefault();const i=r("#fullName").value.trim(),n=r("#email").value.trim(),a=r("#phone").value.trim(),l=r("#password").value;if(!i||!n||!a||!l){u("Please fill in all fields");return}if(l.length<6){u("Password must be at least 6 characters");return}const c=r('[data-testid="btnRegister"]');c.textContent="Creating Account...",c.disabled=!0;try{const d=await x("/auth/register",{method:"POST",body:JSON.stringify({name:i,email:n,phone:a,password:l})});A(d.token),o.session={user:{email:d.user.email,id:d.user.id,name:d.user.name||i,phone:d.user.phone||a},kycTier:"TIER_1"},I(),u("Account created successfully!","success"),h("/dashboard")}catch(d){const b=((v=d==null?void 0:d.error)==null?void 0:v.code)||(d==null?void 0:d.message)||"REGISTER_FAILED",F=b==="USER_EXISTS"?"An account with this email already exists":b==="INVALID_EMAIL"?"Please enter a valid email address":b==="WEAK_PASSWORD"?"Password is too weak":"Unable to create account. Please try again.";console.error("Registration Error:",d),u(F)}finally{c.textContent="Create Account",c.disabled=!1}}),s("input","#phone",e=>{let i=e.target.value.replace(/\D/g,"");i.length>=3&&(i=i.replace(/(\d{3})(\d{0,3})(\d{0,4})/,(n,a,l,c)=>{let v=a;return l&&(v+="-"+l),c&&(v+="-"+c),v})),e.target.value=i})}function Y(){var n,a,l,c,v,d;const t=r("#app"),e=((a=(n=o==null?void 0:o.session)==null?void 0:n.user)==null?void 0:a.name)||((c=(l=o==null?void 0:o.session)==null?void 0:l.user)!=null&&c.email?o.session.user.email.split("@")[0]:"User");(d=(v=o==null?void 0:o.session)==null?void 0:v.user)!=null&&d.email;const i=e.substring(0,2).toUpperCase();t.innerHTML=`
+  `,s("click",'[data-testid="btnBack"]',()=>{h("/landing")}),s("submit","#registerForm",async e=>{var v;e.preventDefault();const i=r("#fullName").value.trim(),n=r("#email").value.trim(),a=r("#phone").value.trim(),l=r("#password").value;if(!i||!n||!a||!l){u("Please fill in all fields");return}if(l.length<6){u("Password must be at least 6 characters");return}const c=r('[data-testid="btnRegister"]');c.textContent="Creating Account...",c.disabled=!0;try{const d=await x("/auth/register",{method:"POST",body:JSON.stringify({name:i,email:n,phone:a,password:l})});L(d.token),o.session={user:{email:d.user.email,id:d.user.id,name:d.user.name||i,phone:d.user.phone||a},kycTier:"TIER_1"},D(),u("Account created successfully!","success"),h("/dashboard")}catch(d){const b=((v=d==null?void 0:d.error)==null?void 0:v.code)||(d==null?void 0:d.message)||"REGISTER_FAILED",V=b==="USER_EXISTS"?"An account with this email already exists":b==="INVALID_EMAIL"?"Please enter a valid email address":b==="WEAK_PASSWORD"?"Password is too weak":"Unable to create account. Please try again.";console.error("Registration Error:",d),u(V)}finally{c.textContent="Create Account",c.disabled=!1}}),s("input","#phone",e=>{let i=e.target.value.replace(/\D/g,"");i.length>=3&&(i=i.replace(/(\d{3})(\d{0,3})(\d{0,4})/,(n,a,l,c)=>{let v=a;return l&&(v+="-"+l),c&&(v+="-"+c),v})),e.target.value=i})}function Q(){var n,a,l,c,v,d;const t=r("#app"),e=((a=(n=o==null?void 0:o.session)==null?void 0:n.user)==null?void 0:a.name)||((c=(l=o==null?void 0:o.session)==null?void 0:l.user)!=null&&c.email?o.session.user.email.split("@")[0]:"User");(d=(v=o==null?void 0:o.session)==null?void 0:v.user)!=null&&d.email;const i=e.substring(0,2).toUpperCase();t.innerHTML=`
     <div class="dashboard-container">
       <!-- Header Section -->
       <div class="dashboard-header">
@@ -226,7 +226,7 @@
         </div>
         
         <div class="greeting-section">
-          <h1 class="greeting-title">Hello, ${C(G(e))}! 👋</h1>
+          <h1 class="greeting-title">Hello, ${T(X(e))}! 👋</h1>
           <p class="greeting-subtitle">Welcome back to NovaPay</p>
         </div>
       </div>
@@ -243,7 +243,7 @@
           <div class="card-footer">
             <div class="card-holder">
               <div class="card-label">Card Holder</div>
-              <div class="card-value">${C(e)}</div>
+              <div class="card-value">${T(e)}</div>
             </div>
             <div class="card-expiry">
               <div class="card-label">Expires</div>
@@ -395,16 +395,16 @@
         </a>
       </nav>
     </div>
-  `,s("click","#fabAdd",()=>{h("/add-money")}),s("click",'[data-action="remittance"]',()=>h("/add-money")),s("click",'[data-action="transfer"]',()=>h("/transfers")),s("click",'[data-action="withdraw"]',()=>h("/withdraw")),s("click",'[data-action="more"]',()=>h("/bills")),K()}function w(t){return(Number(t||0)/100).toFixed(2)}function G(t){try{return t.charAt(0).toUpperCase()+t.slice(1)}catch{return t}}function C(t){return String(t).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}async function K(){const t=r("#bal-jmd"),e=r("#bal-usd"),i=r("#total-balance"),n=r("#txList");try{const[a,l]=await Promise.all([x("/wallet/balances"),x("/wallet/transactions").catch(()=>[])]),c=w(a.JMD),v=w(a.USD);t.textContent=`$${c}`,e.textContent=`$${v}`;const d=Number(a.JMD||0)/15500+Number(a.USD||0)/100;i.textContent=`$${d.toFixed(2)}`,!l||!l.length?n.innerHTML=T():n.innerHTML=l.slice(0,5).map(b=>Q(b)).join("")}catch(a){console.error("[DASHBOARD]",a),t.textContent="$0.00",e.textContent="$0.00",i.textContent="$0.00",n.innerHTML=T()}}function Q(t){const e=t.kind==="DEPOSIT"||t.kind==="RECEIVE",i=e?"tx-icon-green":"tx-icon-red",n=e?"tx-amount-positive":"tx-amount-negative",a=e?"+":"-",l=X(t.kind),c=Z(t.kind),v=tt(t.createdAt);return`
+  `,s("click","#fabAdd",()=>{h("/add-money")}),s("click",'[data-action="remittance"]',()=>h("/add-money")),s("click",'[data-action="transfer"]',()=>h("/transfers")),s("click",'[data-action="withdraw"]',()=>h("/withdraw")),s("click",'[data-action="more"]',()=>h("/bills")),Z()}function S(t){return(Number(t||0)/100).toFixed(2)}function X(t){try{return t.charAt(0).toUpperCase()+t.slice(1)}catch{return t}}function T(t){return String(t).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}async function Z(){const t=r("#bal-jmd"),e=r("#bal-usd"),i=r("#total-balance"),n=r("#txList");try{const[a,l]=await Promise.all([x("/wallet/balances"),x("/wallet/transactions").catch(()=>[])]),c=S(a.JMD),v=S(a.USD);t.textContent=`$${c}`,e.textContent=`$${v}`;const d=Number(a.JMD||0)/15500+Number(a.USD||0)/100;i.textContent=`$${d.toFixed(2)}`,!l||!l.length?n.innerHTML=B():n.innerHTML=l.slice(0,5).map(b=>tt(b)).join("")}catch(a){console.error("[DASHBOARD]",a),t.textContent="$0.00",e.textContent="$0.00",i.textContent="$0.00",n.innerHTML=B()}}function tt(t){const e=t.kind==="DEPOSIT"||t.kind==="RECEIVE",i=e?"tx-icon-green":"tx-icon-red",n=e?"tx-amount-positive":"tx-amount-negative",a=e?"+":"-",l=et(t.kind),c=it(t.kind),v=st(t.createdAt);return`
     <div class="transaction-item">
       <div class="tx-icon ${i}">${l}</div>
       <div class="tx-info">
         <div class="tx-title">${c}</div>
         <div class="tx-time">${v}</div>
       </div>
-      <div class="tx-amount ${n}">${a}${w(t.amount)} ${t.currency}</div>
+      <div class="tx-amount ${n}">${a}${S(t.amount)} ${t.currency}</div>
     </div>
-  `}function T(){return`
+  `}function B(){return`
     <div class="transaction-item">
       <div class="tx-icon tx-icon-green">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -444,7 +444,7 @@
       </div>
       <div class="tx-amount tx-amount-negative">-$85.50</div>
     </div>
-  `}function X(t){const e={DEPOSIT:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',WITHDRAW:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',TRANSFER:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',BILL:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'};return e[t]||e.TRANSFER}function Z(t){return{DEPOSIT:"Deposit",WITHDRAW:"Withdrawal",TRANSFER:"Transfer",BILL:"Bill Payment",RECEIVE:"Received"}[t]||t}function tt(t){try{const e=new Date(t),n=new Date-e,a=Math.floor(n/6e4);return a<60?`${a} mins ago`:a<1440?`${Math.floor(a/60)} hours ago`:e.toLocaleDateString("en-US",{month:"short",day:"numeric"})}catch{return"Recently"}}function et(){const t=r("#app");t.innerHTML=`
+  `}function et(t){const e={DEPOSIT:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',WITHDRAW:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',TRANSFER:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',BILL:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'};return e[t]||e.TRANSFER}function it(t){return{DEPOSIT:"Deposit",WITHDRAW:"Withdrawal",TRANSFER:"Transfer",BILL:"Bill Payment",RECEIVE:"Received"}[t]||t}function st(t){try{const e=new Date(t),n=new Date-e,a=Math.floor(n/6e4);return a<60?`${a} mins ago`:a<1440?`${Math.floor(a/60)} hours ago`:e.toLocaleDateString("en-US",{month:"short",day:"numeric"})}catch{return"Recently"}}function at(){const t=r("#app");t.innerHTML=`
     <div class="container page-center">
       <div class="logo">NovaPay</div>
       
@@ -471,7 +471,7 @@
         </p>
       </div>
     </div>
-  `,s(t,'[data-testid="btnSignIn"]',"click"),s(t,'[data-testid="btnCreateAccount"]',"click")}function y(t,e="JMD"){const i=Math.abs(t);return e==="JMD"?`J$${i.toLocaleString("en-JM",{minimumFractionDigits:0,maximumFractionDigits:0})}`:e==="USD"?`$${i.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}`:`${e} ${i.toLocaleString()}`}function it(t){const e=new Date(t),i=new Date,n=Math.abs(i-e),a=Math.ceil(n/(1e3*60*60*24));return a===1?"Today":a===2?"Yesterday":a<=7?`${a-1} days ago`:e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:e.getFullYear()!==i.getFullYear()?"numeric":void 0})}let g={step:1,recipient:null,amount:0};function st(){const t=r("#app");t.innerHTML=`
+  `,s(t,'[data-testid="btnSignIn"]',"click"),s(t,'[data-testid="btnCreateAccount"]',"click")}function y(t,e="JMD"){const i=Math.abs(t);return e==="JMD"?`J$${i.toLocaleString("en-JM",{minimumFractionDigits:0,maximumFractionDigits:0})}`:e==="USD"?`$${i.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}`:`${e} ${i.toLocaleString()}`}function nt(t){const e=new Date(t),i=new Date,n=Math.abs(i-e),a=Math.ceil(n/(1e3*60*60*24));return a===1?"Today":a===2?"Yesterday":a<=7?`${a-1} days ago`:e.toLocaleDateString("en-US",{month:"short",day:"numeric",year:e.getFullYear()!==i.getFullYear()?"numeric":void 0})}let g={step:1,recipient:null,amount:0};function ot(){const t=r("#app");t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -487,10 +487,10 @@
       </div>
       
       <div id="stepContent">
-        ${at()}
+        ${lt()}
       </div>
     </div>
-  `,lt()}function at(){switch(g.step){case 1:return B();case 2:return nt();case 3:return ot();default:return B()}}function B(){return`
+  `,dt()}function lt(){switch(g.step){case 1:return $();case 2:return ct();case 3:return rt();default:return $()}}function $(){return`
     <div class="card">
       <h3 class="text-lg mb-4">Select Recipient</h3>
       
@@ -524,7 +524,7 @@
         `).join("")}
       </div>
     </div>
-  `}function nt(){return`
+  `}function ct(){return`
     <div class="card">
       <h3 class="text-lg mb-4">Send to ${g.recipient.name}</h3>
       
@@ -567,7 +567,7 @@
         Continue
       </button>
     </div>
-  `}function ot(){return`
+  `}function rt(){return`
     <div class="card">
       <h3 class="text-lg mb-6 text-center">Confirm Transfer</h3>
       
@@ -606,7 +606,7 @@
         Edit Amount
       </button>
     </div>
-  `}function lt(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,'[data-action="scan-qr"]',"click"),s(t,".contact-item","click"),s(t,"#amountInput","input"),s(t,"[data-quick-amount]","click"),s(t,"#continueBtn","click"),s(t,'[data-testid="btnConfirmSend"]',"click"),s(t,'[data-action="edit-amount"]',"click")}const L=document.createElement("style");L.textContent=`
+  `}function dt(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,'[data-action="scan-qr"]',"click"),s(t,".contact-item","click"),s(t,"#amountInput","input"),s(t,"[data-quick-amount]","click"),s(t,"#continueBtn","click"),s(t,'[data-testid="btnConfirmSend"]',"click"),s(t,'[data-action="edit-amount"]',"click")}const P=document.createElement("style");P.textContent=`
   .contact-item {
     display: flex;
     justify-content: space-between;
@@ -627,7 +627,7 @@
   .opacity-50 {
     opacity: 0.5;
   }
-`;document.head.appendChild(L);function ct(){const t=r("#app");t.innerHTML=`
+`;document.head.appendChild(P);function vt(){const t=r("#app");t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -759,7 +759,7 @@
     .space-y-4 > * + * {
       margin-top: 1rem;
     }
-  `,document.head.appendChild(e),s(t,".add-money-option","click"),s(t,'[data-action="copy-account"]',"click"),s(t,'[data-action="copy-reference"]',"click"),s(t,'[data-action="share-details"]',"click"),s(t,"[data-amount]","click")}function rt(){const t=r("#app"),e=[{id:"jps",name:"JPS",icon:"⚡",category:"Electricity"},{id:"nwc",name:"NWC",icon:"💧",category:"Water"},{id:"flow",name:"Flow",icon:"📱",category:"Mobile"},{id:"digicel",name:"Digicel",icon:"📱",category:"Mobile"},{id:"lime",name:"LIME",icon:"☎️",category:"Internet"},{id:"ncb",name:"NCB",icon:"🏦",category:"Credit Card"},{id:"sagicor",name:"Sagicor",icon:"🛡️",category:"Insurance"},{id:"guardian",name:"Guardian Life",icon:"🛡️",category:"Insurance"}];t.innerHTML=`
+  `,document.head.appendChild(e),s(t,".add-money-option","click"),s(t,'[data-action="copy-account"]',"click"),s(t,'[data-action="copy-reference"]',"click"),s(t,'[data-action="share-details"]',"click"),s(t,"[data-amount]","click")}function ut(){const t=r("#app"),e=[{id:"jps",name:"JPS",icon:"⚡",category:"Electricity"},{id:"nwc",name:"NWC",icon:"💧",category:"Water"},{id:"flow",name:"Flow",icon:"📱",category:"Mobile"},{id:"digicel",name:"Digicel",icon:"📱",category:"Mobile"},{id:"lime",name:"LIME",icon:"☎️",category:"Internet"},{id:"ncb",name:"NCB",icon:"🏦",category:"Credit Card"},{id:"sagicor",name:"Sagicor",icon:"🛡️",category:"Insurance"},{id:"guardian",name:"Guardian Life",icon:"🛡️",category:"Insurance"}];t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -767,9 +767,9 @@
         <div></div>
       </div>
       
-      ${dt(e)}
+      ${pt(e)}
     </div>
-  `,vt()}function dt(t){return`
+  `,ht()}function pt(t){return`
     <div class="mb-4">
       <input 
         type="text" 
@@ -816,7 +816,7 @@
         `).join("")}
       </div>
     </div>
-  `}function vt(){const t=r("#app");s(t,".biller-item","click"),s(t,'[data-action="nav-back"]',"click"),s(t,'[data-action="bill-back"]',"click"),s(t,"#billerSearch","input"),s(t,"#billForm","submit"),s(t,"#billAmount","input")}const D=document.createElement("style");D.textContent=`
+  `}function ht(){const t=r("#app");s(t,".biller-item","click"),s(t,'[data-action="nav-back"]',"click"),s(t,'[data-action="bill-back"]',"click"),s(t,"#billerSearch","input"),s(t,"#billForm","submit"),s(t,"#billAmount","input")}const N=document.createElement("style");N.textContent=`
   .biller-item {
     display: flex;
     justify-content: space-between;
@@ -841,7 +841,7 @@
   .flex-1 {
     flex: 1;
   }
-`;document.head.appendChild(D);function ut(){const t=r("#app");t.innerHTML=`
+`;document.head.appendChild(N);function mt(){const t=r("#app");t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -849,9 +849,9 @@
         <div></div>
       </div>
       
-      ${pt()}
+      ${gt()}
     </div>
-  `,ht()}function pt(){return`
+  `,bt()}function gt(){return`
     <div class="card mb-6">
       <h3 class="text-lg mb-4">Choose withdrawal method</h3>
       
@@ -891,7 +891,7 @@
         <p class="text-muted">Ready to withdraw</p>
       </div>
     </div>
-  `}function ht(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,".method-item","click"),s(t,".bank-account-item","click"),s(t,"[data-quick-amount]","click"),s(t,"#withdrawAmount, #agentAmount","input"),s(t,"#bankWithdrawForm","submit"),s(t,"#agentWithdrawForm","submit"),s(t,'[data-action="withdraw-back"]',"click"),s(t,'[data-action="agent-complete"]',"click")}const P=document.createElement("style");P.textContent=`
+  `}function bt(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,".method-item","click"),s(t,".bank-account-item","click"),s(t,"[data-quick-amount]","click"),s(t,"#withdrawAmount, #agentAmount","input"),s(t,"#bankWithdrawForm","submit"),s(t,"#agentWithdrawForm","submit"),s(t,'[data-action="withdraw-back"]',"click"),s(t,'[data-action="agent-complete"]',"click")}const H=document.createElement("style");H.textContent=`
   .method-item, .bank-account-item {
     display: flex;
     justify-content: space-between;
@@ -912,7 +912,7 @@
   .flex-1 { flex: 1; }
   .space-y-1 > * + * { margin-top: 0.25rem; }
   .space-y-2 > * + * { margin-top: 0.5rem; }
-`;document.head.appendChild(P);function mt(){r("#app"),o.card.hasCard?bt():gt()}function gt(){const t=r("#app");t.innerHTML=`
+`;document.head.appendChild(H);function ft(){r("#app"),o.card.hasCard?yt():xt()}function xt(){const t=r("#app");t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -962,7 +962,7 @@
         </p>
       </div>
     </div>
-  `,s(t,'[data-testid="btnActivateCard"]',"click")}function bt(){const t=r("#app"),e=o.txs.filter(i=>i.type==="CARD").slice(0,5);t.innerHTML=`
+  `,s(t,'[data-testid="btnActivateCard"]',"click")}function yt(){const t=r("#app"),e=o.txs.filter(i=>i.type==="CARD").slice(0,5);t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -1058,7 +1058,7 @@
             <div class="tx-item">
               <div class="tx-info">
                 <h4>${i.title}</h4>
-                <p>${it(i.ts)}</p>
+                <p>${nt(i.ts)}</p>
               </div>
               <div class="tx-amount ${i.amount>0?"positive":"negative"}">
                 ${i.amount>0?"+":""}${y(i.amount,i.currency)}
@@ -1074,7 +1074,7 @@
         </div>
       </div>
     </div>
-  `,ft()}function ft(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,"#toggleCvv","click"),s(t,"#toggleFreeze","click"),s(t,"#addToWallet","click"),s(t,"#setLimits","click"),s(t,"#cardSettings","click")}const N=document.createElement("style");N.textContent=`
+  `,kt()}function kt(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,"#toggleCvv","click"),s(t,"#toggleFreeze","click"),s(t,"#addToWallet","click"),s(t,"#setLimits","click"),s(t,"#cardSettings","click")}const F=document.createElement("style");F.textContent=`
   .card-action {
     display: flex;
     justify-content: space-between;
@@ -1097,7 +1097,7 @@
   .space-y-4 > * + * {
     margin-top: 1rem;
   }
-`;document.head.appendChild(N);function xt(){const t=r("#app");t.innerHTML=`
+`;document.head.appendChild(F);function wt(){const t=r("#app");t.innerHTML=`
     <div class="container page">
       <div class="page-header">
         <button class="back-btn" data-action="nav-back">←</button>
@@ -1289,7 +1289,7 @@
         </div>
       </div>
     </div>
-  `,yt()}function yt(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,"#completeKyc","click"),s(t,"#enableBiometric","click"),s(t,"#changePin","click"),s(t,"#notifications","click"),s(t,"#privacy","click"),s(t,"#helpCenter","click"),s(t,"#contactSupport","click"),s(t,"#feedback","click"),s(t,"#terms","click"),s(t,"#privacy-policy","click"),s(t,'[data-testid="btnLogout"]',"click")}const H=document.createElement("style");H.textContent=`
+  `,St()}function St(){const t=r("#app");s(t,'[data-action="nav-back"]',"click"),s(t,"#completeKyc","click"),s(t,"#enableBiometric","click"),s(t,"#changePin","click"),s(t,"#notifications","click"),s(t,"#privacy","click"),s(t,"#helpCenter","click"),s(t,"#contactSupport","click"),s(t,"#feedback","click"),s(t,"#terms","click"),s(t,"#privacy-policy","click"),s(t,'[data-testid="btnLogout"]',"click")}const J=document.createElement("style");J.textContent=`
   .profile-action {
     display: flex;
     justify-content: space-between;
@@ -1332,7 +1332,7 @@
   .text-yellow-800 {
     color: #92400e;
   }
-`;document.head.appendChild(H);function kt(){const t=r("#app");t.innerHTML=`
+`;document.head.appendChild(J);function Ct(){const t=r("#app");t.innerHTML=`
     <div class="page-container">
       <!-- Header -->
       <div class="page-header-modern">
@@ -1375,12 +1375,12 @@
         </div>
       </div>
     </div>
-  `,s("click","#btnBack",()=>S()),s("click","#btnFilter",()=>u("Filter options coming soon")),document.querySelectorAll(".filter-tab").forEach(e=>{e.addEventListener("click",i=>{document.querySelectorAll(".filter-tab").forEach(a=>a.classList.remove("active")),i.target.classList.add("active");const n=i.target.dataset.filter;$(n)})}),$("all")}async function $(t="all"){const e=r("#txContent");try{const i=await x("/wallet/transactions");if(!i||i.length===0){e.innerHTML=$t();return}let n=i;t==="income"?n=i.filter(l=>l.kind==="DEPOSIT"||l.kind==="RECEIVE"):t==="expense"&&(n=i.filter(l=>l.kind==="WITHDRAW"||l.kind==="TRANSFER"||l.kind==="BILL"));const a=wt(n);e.innerHTML=Ct(a)}catch(i){console.error("[TRANSACTIONS]",i),e.innerHTML=Bt()}}function wt(t){const e={};return t.forEach(i=>{const n=new Date(i.createdAt),a=St(n);e[a]||(e[a]=[]),e[a].push(i)}),e}function St(t){const e=new Date,i=new Date(e);return i.setDate(i.getDate()-1),t.toDateString()===e.toDateString()?"Today":t.toDateString()===i.toDateString()?"Yesterday":t.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}function Ct(t){return Object.entries(t).map(([e,i])=>`
+  `,s("click","#btnBack",()=>C()),s("click","#btnFilter",()=>u("Filter options coming soon")),document.querySelectorAll(".filter-tab").forEach(e=>{e.addEventListener("click",i=>{document.querySelectorAll(".filter-tab").forEach(a=>a.classList.remove("active")),i.target.classList.add("active");const n=i.target.dataset.filter;E(n)})}),E("all")}async function E(t="all"){const e=r("#txContent");try{const i=await x("/wallet/transactions");if(!i||i.length===0){e.innerHTML=At();return}let n=i;t==="income"?n=i.filter(l=>l.kind==="DEPOSIT"||l.kind==="RECEIVE"):t==="expense"&&(n=i.filter(l=>l.kind==="WITHDRAW"||l.kind==="TRANSFER"||l.kind==="BILL"));const a=Tt(n);e.innerHTML=$t(a)}catch(i){console.error("[TRANSACTIONS]",i),e.innerHTML=Rt()}}function Tt(t){const e={};return t.forEach(i=>{const n=new Date(i.createdAt),a=Bt(n);e[a]||(e[a]=[]),e[a].push(i)}),e}function Bt(t){const e=new Date,i=new Date(e);return i.setDate(i.getDate()-1),t.toDateString()===e.toDateString()?"Today":t.toDateString()===i.toDateString()?"Yesterday":t.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}function $t(t){return Object.entries(t).map(([e,i])=>`
     <div class="tx-group">
       <div class="tx-date-header">${e}</div>
-      ${i.map(n=>Tt(n)).join("")}
+      ${i.map(n=>Et(n)).join("")}
     </div>
-  `).join("")}function Tt(t){const e=t.kind==="DEPOSIT"||t.kind==="RECEIVE",i=e?"tx-icon-green":t.kind==="TRANSFER"?"tx-icon-blue":t.kind==="BILL"?"tx-icon-orange":"tx-icon-red",n=e?"tx-amount-positive":"tx-amount-negative",a=e?"+":"-",l=Et(t.kind),c=Rt(t.kind),v=Mt(t.createdAt),d=(Number(t.amount||0)/100).toFixed(2);return`
+  `).join("")}function Et(t){const e=t.kind==="DEPOSIT"||t.kind==="RECEIVE",i=e?"tx-icon-green":t.kind==="TRANSFER"?"tx-icon-blue":t.kind==="BILL"?"tx-icon-orange":"tx-icon-red",n=e?"tx-amount-positive":"tx-amount-negative",a=e?"+":"-",l=Mt(t.kind),c=It(t.kind),v=Lt(t.createdAt),d=(Number(t.amount||0)/100).toFixed(2);return`
     <div class="tx-card">
       <div class="tx-icon-wrapper ${i}">${l}</div>
       <div class="tx-details">
@@ -1393,7 +1393,7 @@
         <div class="tx-currency">${t.currency}</div>
       </div>
     </div>
-  `}function Bt(){return`
+  `}function Rt(){return`
     <div class="tx-group">
       <div class="tx-date-header">Today</div>
       <div class="tx-card">
@@ -1464,7 +1464,7 @@
         </div>
       </div>
     </div>
-  `}function $t(){return`
+  `}function At(){return`
     <div class="empty-state">
       <div class="empty-icon">
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1475,7 +1475,7 @@
       <h3 class="empty-title">No Transactions Yet</h3>
       <p class="empty-text">Your transaction history will appear here</p>
     </div>
-  `}function Et(t){const e={DEPOSIT:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',WITHDRAW:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',TRANSFER:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',BILL:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>',RECEIVE:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'};return e[t]||e.TRANSFER}function Rt(t){return{DEPOSIT:"Deposit",WITHDRAW:"Withdrawal",TRANSFER:"Transfer",BILL:"Bill Payment",RECEIVE:"Received"}[t]||t}function Mt(t){try{return new Date(t).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:!0})}catch{return"Recently"}}function At(){var i;const t=r("#app"),e=((i=o==null?void 0:o.session)==null?void 0:i.kycTier)||"TIER_1";t.innerHTML=`
+  `}function Mt(t){const e={DEPOSIT:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',WITHDRAW:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',TRANSFER:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',BILL:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>',RECEIVE:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'};return e[t]||e.TRANSFER}function It(t){return{DEPOSIT:"Deposit",WITHDRAW:"Withdrawal",TRANSFER:"Transfer",BILL:"Bill Payment",RECEIVE:"Received"}[t]||t}function Lt(t){try{return new Date(t).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:!0})}catch{return"Recently"}}function Dt(){var i;const t=r("#app"),e=((i=o==null?void 0:o.session)==null?void 0:i.kycTier)||"TIER_1";t.innerHTML=`
     <div class="page-container">
       <!-- Header -->
       <div class="page-header-modern">
@@ -1490,12 +1490,12 @@
 
       <!-- Current Status -->
       <div class="kyc-status-card">
-        <div class="kyc-status-badge ${It(e)}">
-          ${Lt(e)}
-          <span>${Dt(e)}</span>
+        <div class="kyc-status-badge ${Pt(e)}">
+          ${Nt(e)}
+          <span>${Ht(e)}</span>
         </div>
         <h2 class="kyc-status-title">Your Verification Status</h2>
-        <p class="kyc-status-desc">${Pt(e)}</p>
+        <p class="kyc-status-desc">${Ft(e)}</p>
       </div>
 
       <!-- Verification Tiers -->
@@ -1605,7 +1605,7 @@
         </div>
       </div>
     </div>
-  `,s("click","#btnBack",()=>S()),document.querySelectorAll("[data-tier]").forEach(n=>{n.addEventListener("click",a=>{const l=a.target.dataset.tier;Nt(l)})})}function It(t){return{TIER_1:"tier-basic",TIER_2:"tier-standard",TIER_3:"tier-premium"}[t]||"tier-basic"}function Lt(t){const e={TIER_1:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',TIER_2:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',TIER_3:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>'};return e[t]||e.TIER_1}function Dt(t){return{TIER_1:"Basic",TIER_2:"Standard",TIER_3:"Premium"}[t]||"Basic"}function Pt(t){return{TIER_1:"You have basic verification. Upgrade to unlock higher limits and premium features.",TIER_2:"You have standard verification. Upgrade to premium for unlimited transactions.",TIER_3:"You have premium verification. Enjoy unlimited transactions and all features."}[t]||"Complete verification to unlock all features."}function Nt(t){u(`Starting Tier ${t} verification process...`),setTimeout(()=>{u("Verification process will be available soon")},1e3)}function Ht(){var l,c;const t=r("#app"),e=((l=o==null?void 0:o.session)==null?void 0:l.user)||{},i=e.name||((c=e.email)==null?void 0:c.split("@")[0])||"User",n=e.email||"",a=i.substring(0,2).toUpperCase();t.innerHTML=`
+  `,s("click","#btnBack",()=>C()),document.querySelectorAll("[data-tier]").forEach(n=>{n.addEventListener("click",a=>{const l=a.target.dataset.tier;Jt(l)})})}function Pt(t){return{TIER_1:"tier-basic",TIER_2:"tier-standard",TIER_3:"tier-premium"}[t]||"tier-basic"}function Nt(t){const e={TIER_1:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',TIER_2:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',TIER_3:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>'};return e[t]||e.TIER_1}function Ht(t){return{TIER_1:"Basic",TIER_2:"Standard",TIER_3:"Premium"}[t]||"Basic"}function Ft(t){return{TIER_1:"You have basic verification. Upgrade to unlock higher limits and premium features.",TIER_2:"You have standard verification. Upgrade to premium for unlimited transactions.",TIER_3:"You have premium verification. Enjoy unlimited transactions and all features."}[t]||"Complete verification to unlock all features."}function Jt(t){u(`Starting Tier ${t} verification process...`),setTimeout(()=>{u("Verification process will be available soon")},1e3)}function Vt(){var l,c;const t=r("#app"),e=((l=o==null?void 0:o.session)==null?void 0:l.user)||{},i=e.name||((c=e.email)==null?void 0:c.split("@")[0])||"User",n=e.email||"",a=i.substring(0,2).toUpperCase();t.innerHTML=`
     <div class="page-container">
       <!-- Header -->
       <div class="page-header-modern">
@@ -1621,8 +1621,8 @@
       <!-- Profile Section -->
       <div class="settings-profile">
         <div class="settings-avatar">${a}</div>
-        <h2 class="settings-name">${E(i)}</h2>
-        <p class="settings-email">${E(n)}</p>
+        <h2 class="settings-name">${R(i)}</h2>
+        <p class="settings-email">${R(n)}</p>
         <button class="btn-outline-sm" id="btnEditProfile">Edit Profile</button>
       </div>
 
@@ -1823,14 +1823,14 @@
         </div>
       </div>
     </div>
-  `,s("click","#btnBack",()=>S()),s("click","#btnEditProfile",()=>h("/profile")),s("click","#btnProfile",()=>h("/profile")),s("click","#btnKYC",()=>h("/kyc")),s("click","#btnSecurity",()=>u("Security settings coming soon")),s("click","#btnLanguage",()=>u("Language settings coming soon")),s("click","#btnHelp",()=>u("Help center coming soon")),s("click","#btnTerms",()=>u("Terms & Privacy coming soon")),s("click","#btnAbout",()=>u("NovaPay v1.0.0 - Modern Digital Wallet")),s("click","#btnLogout",()=>{confirm("Are you sure you want to log out?")&&(j(),u("Logged out successfully"),h("/login"))}),s("change","#toggleNotifications",v=>{const d=v.target.checked;u(`Notifications ${d?"enabled":"disabled"}`)})}function E(t){return String(t).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}class Ft{constructor(){this.routes=new Map,this.currentRoute=null,this.defaultRoute="/login",this.authRoute="/dashboard",window.addEventListener("hashchange",()=>this.handleRoute()),window.addEventListener("load",()=>this.handleRoute()),console.log("[Router] Initialized hash-based routing system ✅")}addRoute(e,i,n=!1){this.routes.set(e,{handler:i,requiresAuth:n})}setDefaults(e,i){this.defaultRoute=e,this.authRoute=i}navigate(e){window.location.hash!==`#${e}`?window.location.hash=e:this.handleRoute()}redirect(e){window.location.replace(`#${e}`)}goBack(){window.history.back()}getCurrentHash(){return window.location.hash.slice(1)||""}handleRoute(){const e=this.getCurrentHash();console.log(`[Router] Handling route: ${e||"(none)"}`);let i=this.routes.get(e);if(!i){const n=k()?this.authRoute:this.defaultRoute;console.warn(`[Router] Unknown route "${e}". Redirecting to: ${n}`),this.redirect(n);return}if(i.requiresAuth&&!k()){console.warn(`[Router] Protected route "${e}" blocked — user not logged in`),this.redirect(this.defaultRoute);return}if(!i.requiresAuth&&k()&&(e==="/login"||e==="/register"||e==="/landing")){console.log(`[Router] User logged in, redirecting from public route "${e}" to dashboard`),this.redirect(this.authRoute);return}try{console.log(`[Router] Rendering route: ${e}`);const n=document.getElementById("app");n&&(n.innerHTML=""),i.handler(),this.currentRoute=e}catch(n){console.error(`[Router] Error rendering route "${e}":`,n);const a=document.getElementById("app");a&&(a.innerHTML=`
+  `,s("click","#btnBack",()=>C()),s("click","#btnEditProfile",()=>h("/profile")),s("click","#btnProfile",()=>h("/profile")),s("click","#btnKYC",()=>h("/kyc")),s("click","#btnSecurity",()=>u("Security settings coming soon")),s("click","#btnLanguage",()=>u("Language settings coming soon")),s("click","#btnHelp",()=>u("Help center coming soon")),s("click","#btnTerms",()=>u("Terms & Privacy coming soon")),s("click","#btnAbout",()=>u("NovaPay v1.0.0 - Modern Digital Wallet")),s("click","#btnLogout",()=>{confirm("Are you sure you want to log out?")&&(Y(),u("Logged out successfully"),h("/login"))}),s("change","#toggleNotifications",v=>{const d=v.target.checked;u(`Notifications ${d?"enabled":"disabled"}`)})}function R(t){return String(t).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}class Ot{constructor(){this.routes=new Map,this.currentRoute=null,this.defaultRoute="/login",this.authRoute="/dashboard",window.addEventListener("hashchange",()=>this.handleRoute()),window.addEventListener("load",()=>this.handleRoute()),console.log("[Router] Initialized hash-based routing system ✅")}addRoute(e,i,n=!1){this.routes.set(e,{handler:i,requiresAuth:n})}setDefaults(e,i){this.defaultRoute=e,this.authRoute=i}navigate(e){window.location.hash!==`#${e}`?window.location.hash=e:this.handleRoute()}redirect(e){window.location.replace(`#${e}`)}goBack(){window.history.back()}getCurrentHash(){return window.location.hash.slice(1)||""}handleRoute(){const e=this.getCurrentHash();console.log(`[Router] Handling route: ${e||"(none)"}`);let i=this.routes.get(e);if(!i){const n=w()?this.authRoute:this.defaultRoute;console.warn(`[Router] Unknown route "${e}". Redirecting to: ${n}`),this.redirect(n);return}if(i.requiresAuth&&!w()){console.warn(`[Router] Protected route "${e}" blocked — user not logged in`),this.redirect(this.defaultRoute);return}if(!i.requiresAuth&&w()&&(e==="/login"||e==="/register"||e==="/landing")){console.log(`[Router] User logged in, redirecting from public route "${e}" to dashboard`),this.redirect(this.authRoute);return}try{console.log(`[Router] Rendering route: ${e}`);const n=document.getElementById("app");n&&(n.innerHTML=""),i.handler(),this.currentRoute=e}catch(n){console.error(`[Router] Error rendering route "${e}":`,n);const a=document.getElementById("app");a&&(a.innerHTML=`
           <div style="padding:20px;color:#fff;background:#111;text-align:center;">
             <h3>🚨 Rendering Error</h3>
             <p>${n.message}</p>
-          </div>`)}}}const p=new Ft;function h(t){p.navigate(t)}function S(){p.goBack()}p.addRoute("/login",W);p.addRoute("/register",z);p.addRoute("/landing",et);p.addRoute("/dashboard",Y,!0);p.addRoute("/transfers",st,!0);p.addRoute("/add-money",ct,!0);p.addRoute("/bills",rt,!0);p.addRoute("/withdraw",ut,!0);p.addRoute("/card",mt,!0);p.addRoute("/profile",xt,!0);p.addRoute("/transactions",kt,!0);p.addRoute("/kyc",At,!0);p.addRoute("/settings",Ht,!0);p.setDefaults("/login","/dashboard");console.log("[Router] Routes registered:",Array.from(p.routes.keys()));console.log("[NovaPay] Vite frontend initializing...");try{V()}catch(t){console.error("[NovaPay] Failed to load auth token:",t)}function R(){!location.hash||location.hash==="#/"||location.hash===""?(console.log("[NovaPay] No hash detected, redirecting to /login"),h("/login")):(console.log(`[NovaPay] Hash detected: ${location.hash}`),window.dispatchEvent(new Event("hashchange")))}function M(){const t=document.getElementById("app");t&&!t.innerHTML.trim()&&(t.innerHTML=`
+          </div>`)}}}const p=new Ot;function h(t){p.navigate(t)}function C(){p.goBack()}p.addRoute("/login",G);p.addRoute("/register",K);p.addRoute("/landing",at);p.addRoute("/dashboard",Q,!0);p.addRoute("/transfers",ot,!0);p.addRoute("/add-money",vt,!0);p.addRoute("/bills",ut,!0);p.addRoute("/withdraw",mt,!0);p.addRoute("/card",ft,!0);p.addRoute("/profile",wt,!0);p.addRoute("/transactions",Ct,!0);p.addRoute("/kyc",Dt,!0);p.addRoute("/settings",Vt,!0);p.setDefaults("/login","/dashboard");console.log("[Router] Routes registered:",Array.from(p.routes.keys()));console.log("[NovaPay] Vite frontend initializing...");try{U()}catch(t){console.error("[NovaPay] Failed to load auth token:",t)}function A(){!location.hash||location.hash==="#/"||location.hash===""?(console.log("[NovaPay] No hash detected, redirecting to /login"),h("/login")):(console.log(`[NovaPay] Hash detected: ${location.hash}`),window.dispatchEvent(new Event("hashchange")))}function M(){const t=document.getElementById("app");t&&!t.innerHTML.trim()&&(t.innerHTML=`
       <div style="padding:16px;color:#fff;background:#111;text-align:center;">
         <h2>🚀 NovaPay Loaded</h2>
         <p>Frontend running. Check router or console for issues.</p>
         <button onclick="location.reload()">Reload</button>
       </div>
-    `,console.warn("[NovaPay] Failsafe rendered: router did not paint any view."))}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",()=>{console.log("[NovaPay] DOMContentLoaded → initializing..."),R(),setTimeout(M,500)}):(console.log("[NovaPay] DOM ready → initializing immediately..."),R(),setTimeout(M,500));
+    `,console.warn("[NovaPay] Failsafe rendered: router did not paint any view."))}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",()=>{console.log("[NovaPay] DOMContentLoaded → initializing..."),A(),setTimeout(M,500)}):(console.log("[NovaPay] DOM ready → initializing immediately..."),A(),setTimeout(M,500));

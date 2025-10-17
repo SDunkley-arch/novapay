@@ -13,6 +13,8 @@ import { renderProfile } from './pages/profile.js';
 import { renderTransactions } from './pages/transactions.js';
 import { renderKYC } from './pages/kyc.js';
 import { renderSettings } from './pages/settings.js';
+import { renderEditProfile } from './pages/edit-profile.js';
+import { renderPersonalInfo } from './pages/personal-info.js';
 
 class Router {
   constructor() {
@@ -133,6 +135,8 @@ router.addRoute('/profile', renderProfile, true);
 router.addRoute('/transactions', renderTransactions, true);
 router.addRoute('/kyc', renderKYC, true);
 router.addRoute('/settings', renderSettings, true);
+router.addRoute('/edit-profile', renderEditProfile, true);
+router.addRoute('/personal-info', renderPersonalInfo, true);
 
 // Defaults
 router.setDefaults('/login', '/dashboard');
