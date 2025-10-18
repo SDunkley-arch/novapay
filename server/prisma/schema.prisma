@@ -35,6 +35,13 @@ model Transaction {
   user      User     @relation(fields: [userId], references: [id])
 }
 
+model Wallet {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  balance    Float    @default(0)
+  updatedAt  DateTime @updatedAt
+}
+
 enum TxKind {
   P2P_SEND
   P2P_RECV
