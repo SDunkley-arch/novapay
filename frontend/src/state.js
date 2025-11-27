@@ -20,12 +20,14 @@ export const state = {
       ts: '2025-09-02' 
     }
   ],
+  notifications: [],
   savedBillers: [],
   card: { 
     hasCard: false, 
     masked: '•••• 1234', 
     expiry: '12/28', 
-    frozen: false 
+    frozen: false,
+    linkedAccounts: []
   }
 };
 
@@ -34,6 +36,7 @@ const STORAGE_KEYS = {
   SESSION: 'novapay_session',
   BALANCES: 'novapay_balances',
   TRANSACTIONS: 'novapay_transactions',
+  NOTIFICATIONS: 'novapay_notifications',
   BILLERS: 'novapay_billers',
   CARD: 'novapay_card'
 };
@@ -43,7 +46,20 @@ export function load() {
   try {
     const session = localStorage.getItem(STORAGE_KEYS.SESSION);
     if (session) {
-      state.session = JSON.parse(session);
+      try {
+        const parsed = JSON.parse(session);
+        const rememberMe = parsed.rememberMe;
+        const expiresAt = parsed.rememberMeExpiresAt;
+
+        if (rememberMe === true && expiresAt && Date.now() > expiresAt) {
+          // Remember-me session has expired; clear stored copy
+          localStorage.removeItem(STORAGE_KEYS.SESSION);
+        } else {
+          state.session = parsed;
+        }
+      } catch (e) {
+        console.error('Error parsing stored session:', e);
+      }
     }
 
     const balances = localStorage.getItem(STORAGE_KEYS.BALANCES);
@@ -54,6 +70,11 @@ export function load() {
     const transactions = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
     if (transactions) {
       state.txs = JSON.parse(transactions);
+    }
+
+    const notifications = localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS);
+    if (notifications) {
+      state.notifications = JSON.parse(notifications);
     }
 
     const billers = localStorage.getItem(STORAGE_KEYS.BILLERS);
@@ -74,13 +95,29 @@ export function load() {
 export function save() {
   try {
     if (state.session) {
-      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(state.session));
+      const { rememberMe, rememberMeExpiresAt } = state.session;
+      const now = Date.now();
+
+      if (rememberMe === true) {
+        if (!rememberMeExpiresAt || now < rememberMeExpiresAt) {
+          localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(state.session));
+        } else {
+          localStorage.removeItem(STORAGE_KEYS.SESSION);
+        }
+      } else if (rememberMe === false) {
+        // Explicitly non-persistent session (no remember-me)
+        localStorage.removeItem(STORAGE_KEYS.SESSION);
+      } else {
+        // Backwards compatibility: sessions without rememberMe flag are persisted as before
+        localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(state.session));
+      }
     } else {
       localStorage.removeItem(STORAGE_KEYS.SESSION);
     }
 
     localStorage.setItem(STORAGE_KEYS.BALANCES, JSON.stringify(state.balances));
     localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(state.txs));
+    localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(state.notifications || []));
     localStorage.setItem(STORAGE_KEYS.BILLERS, JSON.stringify(state.savedBillers));
     localStorage.setItem(STORAGE_KEYS.CARD, JSON.stringify(state.card));
   } catch (error) {
@@ -147,8 +184,9 @@ export function clearSession() {
     state.session = null;
     state.balances = { JMD: 0, USD: 0 };
     state.txs = [];
+    state.notifications = [];
     state.savedBillers = [];
-    state.card = { hasCard: false, masked: '', expiry: '', frozen: false };
+    state.card = { hasCard: false, masked: '', expiry: '', frozen: false, linkedAccounts: [] };
 
     // Clear all persistent data
     clearStorage();

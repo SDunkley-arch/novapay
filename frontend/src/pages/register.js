@@ -41,7 +41,7 @@ export function renderRegister() {
         <!-- Form -->
         <form id="registerForm" class="auth-form">
           <div class="form-field">
-            <label class="form-label" for="fullName">Full Name</label>
+            <label class="form-label" for="firstName">First Name</label>
             <div class="input-wrapper">
               <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -49,9 +49,26 @@ export function renderRegister() {
               </svg>
               <input 
                 type="text" 
-                id="fullName" 
+                id="firstName" 
                 class="form-input-modern" 
-                placeholder="John Doe"
+                placeholder="John"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="lastName">Last Name</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input 
+                type="text" 
+                id="lastName" 
+                class="form-input-modern" 
+                placeholder="Doe"
                 required
               >
             </div>
@@ -110,6 +127,7 @@ export function renderRegister() {
 
           <label class="checkbox-wrapper terms-checkbox">
             <input type="checkbox" id="agreeTerms" required>
+            <span class="checkbox-icon"></span>
             <span class="checkbox-label">I agree to the <a href="#" class="link-text">Terms & Conditions</a></span>
           </label>
           
@@ -137,13 +155,16 @@ export function renderRegister() {
   on('submit', '#registerForm', async (e) => {
     e.preventDefault();
     
-    const fullName = qs('#fullName').value.trim();
+    const firstName = qs('#firstName').value.trim();
+    const lastName = qs('#lastName').value.trim();
+    const fullName = `${firstName} ${lastName}`.trim();
     const email = qs('#email').value.trim();
     const phone = qs('#phone').value.trim();
     const password = qs('#password').value;
+    const agreeTerms = !!qs('#agreeTerms') && qs('#agreeTerms').checked;
     
-    if (!fullName || !email || !phone || !password) {
-      showToast('Please fill in all fields', 'error');
+    if (!firstName || !lastName || !email || !phone || !password || !agreeTerms) {
+      showToast('Please fill in all fields and agree to the Terms & Conditions', 'error');
       return;
     }
     
@@ -156,6 +177,14 @@ export function renderRegister() {
     registerBtn.textContent = 'Creating Account...';
     registerBtn.disabled = true;
     
+    // Check network connectivity before attempting registration
+    if (!navigator.onLine) {
+      showToast('No internet connection. Please check your network settings.', 'error');
+      registerBtn.textContent = 'Create Account';
+      registerBtn.disabled = false;
+      return;
+    }
+
     try {
       // Call backend registration endpoint
       const out = await api('/auth/register', {
@@ -188,13 +217,31 @@ export function renderRegister() {
     } catch (err) {
       // Enhanced error extraction and user-friendly messages
       const code = err?.error?.code || err?.message || 'REGISTER_FAILED';
-      const msg =
-        code === 'USER_EXISTS' ? 'An account with this email already exists'
-        : code === 'INVALID_EMAIL' ? 'Please enter a valid email address'
-        : code === 'WEAK_PASSWORD' ? 'Password is too weak'
-        : 'Unable to create account. Please try again.';
+      let msg = 'Unable to create account. Please try again.';
       
-      console.error('Registration Error:', err);
+      // Handle specific error codes
+      if (code === 'EXISTS') {
+        msg = 'An account with this email already exists';
+      } else if (code === 'BAD_INPUT') {
+        msg = 'Please check your information and try again';
+      } else if (code === 'INVALID_EMAIL') {
+        msg = 'Please enter a valid email address';
+      } else if (code === 'WEAK_PASSWORD') {
+        msg = 'Password is too weak';
+      } else if (code === 'NETWORK_ERROR') {
+        msg = 'Network connection issue. Please check your internet connection.';
+      } else if (code === 'TypeError' || err.name === 'TypeError') {
+        msg = 'Network connection issue. Please check your internet connection.';
+      }
+      
+      // Log detailed error information
+      console.error('Registration Error:', {
+        code,
+        message: err.message,
+        stack: err.stack,
+        error: err
+      });
+      
       showToast(msg, 'error');
     } finally {
       registerBtn.textContent = 'Create Account';

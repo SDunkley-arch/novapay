@@ -1,0 +1,152 @@
+/* Recent Transactions Container Styles */
+.recentTransactionsContainer {
+  position: relative;
+  margin-top: 20px;
+  padding-bottom: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.recentTransactionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  margin-bottom: 16px;
+  z-index: 1;
+}
+
+.recentTransactionsTitle {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.recentTransactionsSeeAll {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #543AF8;
+  text-decoration: none;
+}
+
+.recentTransactionsList {
+  background-color: #FFFFFF;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 20px 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+  min-height: 400px;
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Webkit scrollbar styles */
+.recentTransactionsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recentTransactionsList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recentTransactionsList::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.recentTransactionsList::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Transaction Item Styles */
+.np-tx-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #FFFFFF;
+}
+
+.np-tx-row:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.np-tx-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.np-tx-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.np-tx-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.np-tx-company {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.np-tx-desc {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  color: #8D8D8D;
+}
+
+.np-tx-meta {
+  text-align: right;
+  margin-left: 8px;
+}
+
+.np-tx-amount {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.np-tx-amount-positive {
+  color: #00C566;
+}
+
+.np-tx-amount-negative {
+  color: #E53935;
+}
+
+.np-tx-time {
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  color: #9E9E9E;
+}

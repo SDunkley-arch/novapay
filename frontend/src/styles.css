@@ -1,574 +1,146 @@
-/* Figma Tokens (imported) */
 :root {
-  --colorsalertserror: rgba(229, 57, 53, 1);
-  --colorsalertssuccess: rgba(0, 197, 102, 1);
-  --colorsalertswarning: rgba(250, 204, 21, 1);
-  --colorscharade-10: rgba(233, 233, 234, 1);
-  --colorscharade-100: rgba(35, 38, 47, 1);
-  --colorscharade-20: rgba(211, 212, 213, 1);
-  --colorscharade-40: rgba(167, 168, 172, 1);
-  --colorscharade-60: rgba(123, 125, 130, 1);
-  --colorscharade-80: rgba(79, 81, 89, 1);
-  --colorscharade-90: rgba(57, 60, 68, 1);
-  --colorsothersblack: rgba(0, 0, 0, 1);
-  --colorsotherswhite: rgba(255, 255, 255, 1);
-  --colorsprimary-10: rgba(239, 246, 255, 1);
-  --colorsprimary-100: rgba(30, 58, 138, 1);
-  --colorsprimary-20: rgba(219, 234, 254, 1);
-  --colorsprimary-40: rgba(96, 165, 250, 1);
-  --colorsprimary-60: rgba(37, 99, 235, 1);
-  --colorsprimary-80: rgba(29, 78, 216, 1);
-  --colorsprimary-90: rgba(30, 64, 175, 1);
-  --colorssecondary-10: rgba(240, 238, 254, 1);
-  --colorssecondary-100: rgba(84, 58, 248, 1);
-  --colorssecondary-20: rgba(225, 221, 254, 1);
-  --colorssecondary-40: rgba(178, 166, 252, 1);
-  --colorssecondary-60: rgba(144, 127, 250, 1);
-  --colorssecondary-80: rgba(126, 107, 250, 1);
-  --colorssecondary-90: rgba(108, 86, 249, 1);
+  /* Typography tokens from design-tokens.tokens.json */
+
+  /* H1 */
+  --h1-regular-font-size: 24px;
+  --h1-regular-font-family: "Poppins";
+  --h1-regular-font-weight: 400;
+  --h1-regular-line-height: 40px;
+
+  --h1-medium-font-size: 24px;
+  --h1-medium-font-family: "Poppins";
+  --h1-medium-font-weight: 500;
+  --h1-medium-line-height: 40px;
+
+  --h1-semibold-font-size: 32px;
+  --h1-semibold-font-family: "Poppins";
+  --h1-semibold-font-weight: 600;
+  --h1-semibold-line-height: 40px;
+
+  --h1-bold-font-size: 32px;
+  --h1-bold-font-family: "Poppins";
+  --h1-bold-font-weight: 700;
+  --h1-bold-line-height: 40px;
+
+  /* H2 */
+  --h2-regular-font-size: 22px;
+  --h2-regular-font-family: "Poppins";
+  --h2-regular-font-weight: 400;
+  --h2-regular-line-height: 30px;
+
+  --h2-medium-font-size: 22px;
+  --h2-medium-font-family: "Poppins";
+  --h2-medium-font-weight: 500;
+  --h2-medium-line-height: 30px;
+
+  --h2-semibold-font-size: 22px;
+  --h2-semibold-font-family: "Poppins";
+  --h2-semibold-font-weight: 600;
+  --h2-semibold-line-height: 30px;
+
+  --h2-bold-font-size: 22px;
+  --h2-bold-font-family: "Poppins";
+  --h2-bold-font-weight: 700;
+  --h2-bold-line-height: 30px;
+
+  /* H3 */
+  --h3-regular-font-size: 20px;
+  --h3-regular-font-family: "Poppins";
+  --h3-regular-font-weight: 400;
+  --h3-regular-line-height: 28px;
+
+  --h3-medium-font-size: 20px;
+  --h3-medium-font-family: "Poppins";
+  --h3-medium-font-weight: 500;
+  --h3-medium-line-height: 28px;
+
+  --h3-semibold-font-size: 20px;
+  --h3-semibold-font-family: "Poppins";
+  --h3-semibold-font-weight: 600;
+  --h3-semibold-line-height: 28px;
+
+  --h3-bold-font-size: 20px;
+  --h3-bold-font-family: "Poppins";
+  --h3-bold-font-weight: 700;
+  --h3-bold-line-height: 28px;
+
+  /* H4 */
+  --h4-regular-font-size: 18px;
+  --h4-regular-font-family: "Poppins";
+  --h4-regular-font-weight: 400;
+  --h4-regular-line-height: 28px;
+
+  --h4-medium-font-size: 18px;
+  --h4-medium-font-family: "Poppins";
+  --h4-medium-font-weight: 500;
+  --h4-medium-line-height: 28px;
+
+  --h4-semibold-font-size: 18px;
+  --h4-semibold-font-family: "Poppins";
+  --h4-semibold-font-weight: 600;
+  --h4-semibold-line-height: 28px;
+
+  --h4-bold-font-size: 18px;
+  --h4-bold-font-family: "Poppins";
+  --h4-bold-font-weight: 700;
+  --h4-bold-line-height: 28px;
+
+  /* H5 */
+  --h5-regular-font-size: 16px;
+  --h5-regular-font-family: "Poppins";
+  --h5-regular-font-weight: 400;
+  --h5-regular-line-height: 22px;
+
+  --h5-medium-font-size: 16px;
+  --h5-medium-font-family: "Poppins";
+  --h5-medium-font-weight: 500;
+  --h5-medium-line-height: 22px;
+
+  --h5-semibold-font-size: 16px;
+  --h5-semibold-font-family: "Poppins";
+  --h5-semibold-font-weight: 600;
+  --h5-semibold-line-height: 22px;
+
+  --h5-bold-font-size: 16px;
+  --h5-bold-font-family: "Poppins";
+  --h5-bold-font-weight: 700;
+  --h5-bold-line-height: 22px;
+
+  /* H6 */
+  --h6-regular-font-size: 14px;
+  --h6-regular-font-family: "Poppins";
+  --h6-regular-font-weight: 400;
+  --h6-regular-line-height: 20px;
+
+  --h6-medium-font-size: 14px;
+  --h6-medium-font-family: "Poppins";
+  --h6-medium-font-weight: 500;
+  --h6-medium-line-height: 20px;
+
+  --h6-semibold-font-size: 14px;
+  --h6-semibold-font-family: "Poppins";
+  --h6-semibold-font-weight: 600;
+  --h6-semibold-line-height: 20px;
+
+  --h6-bold-font-size: 14px;
+  --h6-bold-font-family: "Poppins";
+  --h6-bold-font-weight: 700;
+  --h6-bold-line-height: 20px;
+
+  /* Label */
+  --label-regular-font-size: 12px;
+  --label-regular-font-weight: 400;
+  --label-regular-font-family: "Poppins";
+  --label-regular-line-height: 12px;
+
+  --label-medium-font-size: 12px;
+  --label-medium-font-weight: 500;
+  --label-medium-font-family: "Poppins";
+  --label-medium-line-height: 14px;
+
+  --label-semibold-font-size: 12px;
+  --label-semibold-font-weight: 600;
+  --label-semibold-font-family: "Poppins";
+  --label-semibold-line-height: 14px;
 }
 
-/* Design System (Light Theme) */
-:root {
-  /* Core palette from Figma tokens */
-  --bg: var(--colorsotherswhite);
-  --surface: var(--colorsotherswhite);
-  --surface-alt: var(--colorscharade-10);
-  --text: var(--colorscharade-100);
-  --muted: var(--colorscharade-60);
-  --primary: var(--colorssecondary-100);       /* #543AF8 */
-  --primary-600: var(--colorssecondary-90);    /* #6C56F9 */
-  --border: var(--colorscharade-20);
-  
-  /* Radii (align to Figma) */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  
-  /* Shadows */
-  --shadow-card: 0 8px 20px rgba(15, 23, 42, 0.08);
-
-  /* Status colors */
-  --success: var(--colorsalertssuccess);
-  --warning: var(--colorsalertswarning);
-  --error: var(--colorsalertserror);
-
-  /* Back-compat mapping to previous tokens used across the app */
-  --card: var(--surface);
-  --accent: var(--primary);
-  --radius: var(--radius-lg);
-  --input-bg: var(--surface-alt);
-  --shadow: var(--shadow-card);
-  --shadow-lg: 0 16px 32px rgba(15, 23, 42, 0.12);
-}
-
-/* Reset and base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Container */
-.container {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 20px;
-  min-height: 100vh;
-}
-
-/* Typography */
-.text-xl { font-size: 1.25rem; font-weight: 600; }
-.text-lg { font-size: 1.125rem; font-weight: 500; }
-.text-base { font-size: 1rem; }
-.text-sm { font-size: 0.875rem; }
-.text-xs { font-size: 0.75rem; }
-/* Extended sizes used in UI */
-.text-2xl { font-size: 1.5rem; font-weight: 700; }
-.text-3xl { font-size: 1.875rem; font-weight: 700; }
-.text-4xl { font-size: 2.25rem; font-weight: 700; }
-.text-6xl { font-size: 3.75rem; font-weight: 800; }
-
-.text-muted { color: var(--muted); }
-.text-accent { color: var(--accent); }
-.text-success { color: var(--success); }
-.text-error { color: var(--error); }
-/* Additional palette utilities */
-.text-yellow-800 { color: #92400e; }
-.text-blue-800 { color: #1e40af; }
-.bg-yellow-50 { background-color: rgba(245, 158, 11, 0.1); }
-.bg-blue-50 { background-color: rgba(59, 130, 246, 0.1); }
-.bg-accent-light { background-color: rgba(79, 209, 197, 0.12); }
-.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-
-/* Layout utilities */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-
-.mt-2 { margin-top: 0.5rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-6 { margin-top: 1.5rem; }
-.mt-8 { margin-top: 2rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mb-8 { margin-bottom: 2rem; }
-
-.p-4 { padding: 1rem; }
-.p-6 { padding: 1.5rem; }
-.px-4 { padding-left: 1rem; padding-right: 1rem; }
-.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-
-/* Cards */
-.card {
-  background-color: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--border);
-}
-
-.card-lg {
-  background-color: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border);
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  min-height: 48px;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: #FFFFFF;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-600);
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background-color: #FFFFFF;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn-ghost {
-  background-color: transparent;
-  color: var(--muted);
-  padding: 0.5rem 1rem;
-}
-
-.btn-ghost:hover {
-  color: var(--text);
-  background-color: var(--input-bg);
-}
-
-.btn-full {
-  width: 100%;
-}
-
-/* Form elements */
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  color: var(--text);
-  font-size: 1rem;
-  transition: border-color 0.2s ease;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.form-input::placeholder {
-  color: var(--muted);
-}
-
-/* Grid */
-.grid {
-  display: grid;
-}
-
-.grid-2 {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-/* Balance display */
-.balance-card {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-600) 100%);
-  color: #FFFFFF;
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.balance-primary {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.balance-secondary {
-  font-size: 1rem;
-  opacity: 0.8;
-}
-
-/* Transaction list */
-.tx-list {
-  list-style: none;
-}
-
-.tx-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.tx-item:last-child {
-  border-bottom: none;
-}
-
-.tx-info h4 {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.tx-info p {
-  color: var(--muted);
-  font-size: 0.875rem;
-}
-
-.tx-amount {
-  font-weight: 600;
-}
-
-.tx-amount.positive {
-  color: var(--success);
-}
-
-.tx-amount.negative {
-  color: var(--error);
-}
-
-/* Quick actions */
-.quick-actions {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.quick-action {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem;
-  background-color: var(--surface);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.2s ease;
-  border: 2px solid transparent;
-}
-
-.quick-action:hover {
-  border-color: var(--primary);
-  transform: translateY(-2px);
-}
-
-.quick-action-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.quick-action-label {
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Toast notifications */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--surface);
-  color: var(--text);
-  padding: 1rem 1.5rem;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  z-index: 1000;
-  animation: slideUp 0.3s ease;
-  border: 1px solid var(--border);
-}
-
-.toast.success {
-  background-color: var(--success);
-  color: white;
-}
-
-.toast.error {
-  background-color: var(--error);
-  color: white;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translate(-50%, 100%);
-    opacity: 0;
-  }
-  to {
-    transform: translate(-50%, 0);
-    opacity: 1;
-  }
-}
-
-/* Page layouts */
-.page {
-  min-height: 100vh;
-  padding: 2rem 0;
-}
-
-.page-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  text-align: center;
-}
-
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  padding-top: 1rem;
-}
-
-.page-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.back-btn:hover {
-  color: var(--text);
-  background-color: var(--surface-alt);
-}
-
-/* Logo */
-.logo {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 1rem;
-}
-
-/* Footer */
-.footer {
-  margin-top: auto;
-  padding: 2rem 0;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.875rem;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .container {
-    padding: 0 16px;
-  }
-  
-  .balance-primary {
-    font-size: 2rem;
-  }
-  
-  .quick-actions {
-    gap: 0.75rem;
-  }
-  
-  .quick-action {
-    padding: 1rem;
-  }
-}
-
-/* Utility classes */
-.hidden { display: none; }
-.text-center { text-align: center; }
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-
-/* Loading states */
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* KYC Banner */
-.kyc-banner {
-  background-color: var(--warning);
-  color: var(--bg);
-  padding: 1rem;
-  border-radius: var(--radius);
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-}
-
-.kyc-banner a {
-  color: var(--bg);
-  text-decoration: underline;
-}
-
-/* Card details */
-.card-display {
-  background: linear-gradient(135deg, var(--accent) 0%, #45B7AA 100%);
-  color: var(--bg);
-  border-radius: var(--radius);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-display::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-
-.card-number {
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-}
-
-.card-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Step indicator */
-.steps {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-
-.step {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: var(--border);
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  margin: 0 0.5rem;
-}
-
-.step.active {
-  background-color: var(--accent);
-  color: var(--bg);
-}
-
-.step.completed {
-  background-color: var(--success);
-  color: white;
-}
-
-/* Amount input */
-.amount-input {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  width: 100%;
-  margin: 2rem 0;
-}
-
-.amount-input:focus {
-  outline: none;
-}
-
-.currency-symbol {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-right: 0.5rem;
-}

@@ -1,0 +1,524 @@
+{
+  "name": "NovaPay Full API & CORS Validation",
+  "timestamp": "2025-10-23T04:21:31.671Z",
+  "target": "http://localhost:8080",
+  "summary": {
+    "total": 32,
+    "passed": 16,
+    "failed": 16
+  },
+  "endpoints": [
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 400,
+      "duration": "124ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 400,
+      "duration": "7ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "4ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/auth/login",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "3ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/auth/register",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 200,
+      "duration": "344ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/auth/register",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 409,
+      "duration": "4ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/auth/register",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "3ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/auth/register",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/wallet/balances",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "5ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/wallet/balances",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/wallet/balances",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 401,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/wallet/balances",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 401,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/wallet/transactions",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/wallet/transactions",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/wallet/transactions",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 401,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/wallet/transactions",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 401,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/transfers/p2p",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 401,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/transfers/p2p",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 401,
+      "duration": "3ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/transfers/p2p",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/transfers/p2p",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/bills/pay",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 401,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/bills/pay",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 401,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/bills/pay",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/bills/pay",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/health",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/health",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 200,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/health",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 200,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/debug",
+      "method": "POST",
+      "origin": "http://localhost:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/debug",
+      "method": "POST",
+      "origin": "http://10.0.2.2:8081",
+      "status": 404,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": false,
+          "details": "Content-Type: text/html; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": false
+    },
+    {
+      "path": "/debug",
+      "method": "GET",
+      "origin": "http://localhost:8081",
+      "status": 200,
+      "duration": "2ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "path": "/debug",
+      "method": "GET",
+      "origin": "http://10.0.2.2:8081",
+      "status": 200,
+      "duration": "1ms",
+      "assertions": [
+        {
+          "assertion": "contentType.startsWith('application/json')",
+          "passed": true,
+          "details": "Content-Type: application/json; charset=utf-8"
+        }
+      ],
+      "error": null,
+      "passed": true
+    }
+  ]
+}

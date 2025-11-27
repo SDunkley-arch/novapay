@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NovaPay Ja</string>
+    <string name="title_activity_main">NovaPay Ja</string>
+    <string name="package_name">com.novapayja.app</string>
+    <string name="custom_url_scheme">com.novapayja.app</string>
+</resources>

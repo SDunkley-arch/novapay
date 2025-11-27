@@ -2,13 +2,25 @@
 import { qs, on, showToast } from '../lib/dom.js';
 import { navigate } from '../router.js';
 import { state, save } from '../state.js';
-import { api, setToken } from '../api.js';
+import { api, setToken, API_BASE_URL } from '../api.js';
 
+const REMEMBER_ME_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-export function renderLogin() {
+export function renderLogin(params = {}) {
   const app = qs('#app');
   
+  // Check if there's a timeout message from the router
+  const timeoutMessage = window.location.hash.includes('timeout=true') ? 
+    'Your session has expired due to inactivity. Please log in again.' : '';
+  
+  // Check if this is a first launch on a new device
+  const isFirstLaunch = localStorage.getItem('novapay_first_launch') === null;
+  if (isFirstLaunch) {
+    localStorage.setItem('novapay_first_launch', 'false');
+  }
+  
   app.innerHTML = `
+    ${timeoutMessage ? `<div class="timeout-message">${timeoutMessage}</div>` : ''}
     <div class="auth-container">
       <!-- Header -->
       <div class="auth-header">
@@ -36,7 +48,7 @@ export function renderLogin() {
             </svg>
           </div>
           <h1 class="auth-title">Welcome Back</h1>
-          <p class="auth-subtitle">Sign in to continue to NovaPay</p>
+          <p class="auth-subtitle">Let's sign you in!</p>
         </div>
 
         <!-- Form -->
@@ -76,8 +88,9 @@ export function renderLogin() {
           </div>
 
           <div class="form-footer">
-            <label class="checkbox-wrapper">
+            <label class="checkbox-wrapper remember-checkbox">
               <input type="checkbox" id="rememberMe">
+              <span class="checkbox-icon"></span>
               <span class="checkbox-label">Remember me</span>
             </label>
             <a href="#" class="link-text" id="forgotPassword">Forgot password?</a>
@@ -106,16 +119,30 @@ export function renderLogin() {
   
   on('click', '#forgotPassword', (e) => {
     e.preventDefault();
-    showToast('Password reset coming soon', 'info');
+    navigate('/forgot-password', { animate: 'slide-right-fade' });
   });
+  // Log API URL for debugging
+  console.log('[NovaPay] Login page loaded, API URL:', API_BASE_URL);
+  
   on('submit', '#loginForm', async (e) => {
     e.preventDefault();
   
     const email = qs('#email').value.trim();
     const password = qs('#password').value;
+    const rememberMeCheckbox = qs('#rememberMe');
+    const rememberMeChecked = !!rememberMeCheckbox && rememberMeCheckbox.checked;
   
     if (!email) { showToast('Please enter your email address', 'error'); return; }
     if (!password) { showToast('Please enter your password', 'error'); return; }
+    
+    // Check network connectivity before attempting login
+    if (!navigator.onLine) {
+      showToast('No internet connection. Please check your network settings.', 'error');
+      return;
+    }
+    
+    // Log request details for debugging
+    console.log('[NovaPay] Attempting login for:', email, 'to URL:', `${API_BASE_URL}/auth/login`);
   
     const btn = qs('[data-testid="btnLogin"]');
     btn.textContent = 'Signing In...';
@@ -128,29 +155,73 @@ export function renderLogin() {
         body: JSON.stringify({ email, password })
       });
   
-      // Persist token for subsequent requests
-      setToken(out.token);
-  
+      // Persist token for subsequent requests (respect Remember me)
+      setToken(out.token, {
+        persist: rememberMeChecked,
+        ttlMs: rememberMeChecked ? REMEMBER_ME_TTL_MS : 0
+      });
+
+      const now = Date.now();
+
       // Store a minimal session from API response
       state.session = {
         user: { email: out.user.email, id: out.user.id },
-        kycTier: 'TIER_1'
+        kycTier: 'TIER_1',
+        rememberMe: rememberMeChecked,
+        rememberMeExpiresAt: rememberMeChecked ? now + REMEMBER_ME_TTL_MS : null
       };
+
+      // Seed a test notification for the dashboard bell
+      if (!Array.isArray(state.notifications)) {
+        state.notifications = [];
+      }
+      state.notifications.unshift({
+        id: 'n' + Date.now(),
+        message: 'Welcome to NovaPay!',
+        createdAt: new Date().toISOString()
+      });
+
       save();
-  
+
       showToast('Welcome back!', 'success');
       navigate('/dashboard');
     } catch (err) {
       // Enhanced error extraction and user-friendly messages
       const code = err?.error?.code || err?.message || 'LOGIN_FAILED';
-      const msg =
-        code === 'BAD_CRED' ? 'Invalid email or password'
-        : code === 'NO_USER' ? 'Account not found'
-        : code === 'NO_AUTH' ? 'Session expired, please log in again'
-        : 'Unable to sign in';
+      let msg = 'Unable to sign in';
       
-      console.error('Login Error:', err);
+      // Handle specific error codes
+      if (code === 'BAD_CRED') {
+        msg = 'Invalid email or password';
+      } else if (code === 'NO_USER') {
+        msg = 'Account not found';
+      } else if (code === 'NO_AUTH') {
+        msg = 'Session expired, please log in again';
+      } else if (code === 'NETWORK_ERROR') {
+        msg = 'Network connection issue. Please check your internet connection.';
+      } else if (code === 'TypeError' || err.name === 'TypeError') {
+        msg = 'Network connection issue. Please check your internet connection.';
+      } else if (code.includes('CORS') || code.includes('cors')) {
+        msg = 'Server connection issue. Please try again later.';
+      } else if (code === 'ConnectException' || (err.message && err.message.includes('Failed to connect'))) {
+        msg = 'Cannot connect to server. Please ensure the server is running and accessible.';
+      }
+      
+      // Log detailed error information
+      console.error('Login Error:', {
+        code,
+        message: err.message,
+        stack: err.stack,
+        error: err
+      });
+      
+      // Show toast with appropriate message
       showToast(msg, 'error');
+      
+      // Log additional diagnostic information
+      console.log('[NovaPay] API Base URL:', API_BASE_URL);
+      console.log('[NovaPay] Network Status:', navigator.onLine ? 'Online' : 'Offline');
+      console.log('[NovaPay] User Agent:', navigator.userAgent);
     } finally {
       btn.textContent = 'Sign In';
       btn.disabled = false;

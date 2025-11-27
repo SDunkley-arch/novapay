@@ -10,7 +10,21 @@ export function renderSettings() {
   const name = user.name || user.email?.split('@')[0] || 'User';
   const email = user.email || '';
   const initials = name.substring(0, 2).toUpperCase();
+  const rawFirstName = name.split(' ')[0] || name;
+  const greeting = `Hi, ${rawFirstName}!`;
   
+  const existingAvatar = (() => {
+    try {
+      return localStorage.getItem('novapay_profile_picture');
+    } catch {
+      return null;
+    }
+  })();
+
+  const avatarHtml = existingAvatar
+    ? '<img src="' + existingAvatar + '" alt="' + name + '" class="settings-avatar-img" />'
+    : initials;
+
   app.innerHTML = `
     <div class="page-container">
       <!-- Header -->
@@ -26,10 +40,9 @@ export function renderSettings() {
 
       <!-- Profile Section -->
       <div class="settings-profile">
-        <div class="settings-avatar">${initials}</div>
-        <h2 class="settings-name">${escapeHtml(name)}</h2>
+        <div class="settings-avatar">${avatarHtml}</div>
+        <h2 class="settings-name">${escapeHtml(greeting)}</h2>
         <p class="settings-email">${escapeHtml(email)}</p>
-        <button class="btn-outline-sm" id="btnEditProfile">Edit Profile</button>
       </div>
 
       <!-- Settings Groups -->
@@ -236,7 +249,6 @@ export function renderSettings() {
 
   // Navigation & actions
   on(root, '#btnBack', 'click', () => goBack());
-  on(root, '#btnEditProfile', 'click', () => navigate('/edit-profile'));
   on(root, '#btnProfile', 'click', () => navigate('/personal-info'));
   on(root, '#btnKYC', 'click', () => navigate('/kyc'));
   on(root, '#btnSecurity', 'click', () => showToast('Security settings coming soon', 'info'));

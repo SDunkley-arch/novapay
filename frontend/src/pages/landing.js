@@ -1,45 +1,31 @@
 // Landing page component
-import { qs, on } from '../lib/dom.js';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { qs } from '../lib/dom.js';
 import { navigate } from '../router.js';
+import LandingScreen from './landing.jsx';
 
 export function renderLanding() {
   const app = qs('#app');
-  
-  app.innerHTML = `
-    <div class="container page-center">
-      <div class="logo">NovaPay</div>
-      
-      <div class="mb-8">
-        <h1 class="text-xl mb-4">Fast. Secure. Yours.</h1>
-        <p class="text-muted text-center">
-          Send money, pay bills, and manage your finances with Jamaica's most trusted digital wallet.
-        </p>
-      </div>
-      
-      <div class="w-full" style="max-width: 320px;">
-        <button class="btn btn-primary btn-full mb-4" data-testid="btnSignIn">
-          Sign In
-        </button>
-        
-        <button class="btn btn-secondary btn-full mb-8" data-testid="btnCreateAccount">
-          Create Account
-        </button>
-      </div>
-      
-      <div class="footer">
-        <p class="text-xs">
-          ⚡ Powered by NovaPay Engine · 🔒 Secured by Bank-Grade Encryption
-        </p>
-      </div>
-    </div>
-  `;
-  
-  // Event listeners
-  on(app, '[data-testid="btnSignIn"]', 'click', () => {
-    navigate('/login');
-  });
-  
-  on(app, '[data-testid="btnCreateAccount"]', 'click', () => {
-    navigate('/register');
-  });
+  if (!app) return;
+
+  // Ensure #app is never empty so the main.js failsafe does not trigger
+  // Create a dedicated inner container for the React root with full-screen styles
+  if (!app.querySelector('#landing-react-root')) {
+    app.innerHTML = '<div id="landing-react-root" style="width:100%;height:100%;margin:0;padding:0;overflow:hidden;position:absolute;top:0;left:0;right:0;bottom:0;"></div>';
+  }
+
+  const mountNode = app.querySelector('#landing-react-root');
+  if (!mountNode) return;
+
+  const handleSignIn = () => navigate('/login');
+  const handleRegister = () => navigate('/register');
+
+  const root = createRoot(mountNode);
+  root.render(
+    React.createElement(LandingScreen, {
+      onSignIn: handleSignIn,
+      onRegister: handleRegister,
+    })
+  );
 }

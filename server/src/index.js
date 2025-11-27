@@ -6,21 +6,60 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 
-// ✅ Corrected paths
 import niumRoutes from "../routes/niumRoutes.js";
 import walletRoutes from "../routes/walletRoutes.js";
+import remittanceRoutes from "../routes/remittanceRoutes.js";
 
 dotenv.config();
 const app = express();
 const db = new PrismaClient();
 
-// Middleware
+// ==============================
+// 🌍 UNIVERSAL CORS HANDLER
+// ==============================
+const allowedOrigins = [
+  "http://localhost:8080",     // local web (Vite)
+  "http://127.0.0.1:8080",
+  "http://localhost:8081",     // alternate local web
+  "http://127.0.0.1:8081",
+  "http://10.0.2.2:8080",      // Android emulator
+  "http://10.0.2.2:8081",      // Android emulator alternate port
+  "capacitor://localhost",     // Capacitor mobile app
+  "http://192.168.0.5:8080",   // LAN testing - current dev server
+  "http://192.168.0.6:8081",   // optional LAN testing
+  "https://app.novapay.app",   // production web
+  "https://api.novapay.app"    // production API
+];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Log every request for visibility
+  console.log(`🌐 [${req.method}] ${req.path} from ${origin || "unknown"}`);
+
+  // Respond immediately to preflight requests
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 
-// Helper functions
+// ==============================
+// 🔐 Helper Functions
+// ==============================
 const sign = (user) =>
-  jwt.sign({ id: user.id }, process.env.JWT_SECRET || "devsecret", { expiresIn: "7d" });
+  jwt.sign({ id: user.id }, process.env.JWT_SECRET || "devsecret", {
+    expiresIn: "7d",
+  });
 
 const auth = (req, res, next) => {
   const h = req.headers.authorization || "";
@@ -34,10 +73,22 @@ const auth = (req, res, next) => {
   }
 };
 
-// ✅ Health Check
+// ==============================
+// 📁 Health + Debug Endpoints
+// ==============================
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
-// ✅ Root Endpoint
+app.get("/debug", (req, res) => {
+  res.json({
+    ok: true,
+    timestamp: new Date().toISOString(),
+    headers: req.headers,
+    origin: req.headers.origin || "unknown",
+    ip: req.ip,
+    env: process.env.NODE_ENV || "development",
+  });
+});
+
 app.get("/", (_req, res) =>
   res.json({
     message: "NovaPay API Server",
@@ -53,46 +104,73 @@ app.get("/", (_req, res) =>
   })
 );
 
-// ✅ Auth Routes
+// ==============================
+// 👥 Authentication
+// ==============================
 app.post("/auth/register", async (req, res) => {
-  const v = z
-    .object({ email: z.string().email(), password: z.string().min(4) })
-    .safeParse(req.body);
-  if (!v.success) return res.status(400).json({ error: { code: "BAD_INPUT" } });
-  const { email, password } = v.data;
+  try {
+    const v = z
+      .object({
+        email: z.string().email(),
+        password: z.string().min(4),
+        name: z.string().optional(),
+        phone: z.string().optional()
+      })
+      .safeParse(req.body);
+    if (!v.success) return res.status(400).json({ error: { code: "BAD_INPUT", details: v.error } });
 
-  const exists = await db.user.findUnique({ where: { email } });
-  if (exists) return res.status(409).json({ error: { code: "EXISTS" } });
+    const { email, password } = v.data;
+    const exists = await db.user.findUnique({ where: { email } });
+    if (exists) return res.status(409).json({ error: { code: "EXISTS" } });
 
-  const hash = await bcrypt.hash(password, 10);
-  const user = await db.user.create({
-    data: { email, password: hash, balance: { create: {} } },
-    include: { balance: true },
-  });
+    // We'll ignore name and phone for now since they're not in the schema
+    // In a real app, we would update the schema to include these fields
+    const hash = await bcrypt.hash(password, 10);
+    const user = await db.user.create({
+      data: { email, password: hash, balance: { create: {} } },
+      include: { balance: true },
+    });
 
-  return res.json({ token: sign(user), user: { id: user.id, email: user.email } });
+    return res.json({
+      token: sign(user),
+      user: { id: user.id, email: user.email },
+    });
+  } catch (err) {
+    console.error("REGISTRATION ERROR:", err);
+    return res.status(500).json({ error: { code: "REGISTER_FAILED" } });
+  }
 });
 
 app.post("/auth/login", async (req, res) => {
-  const v = z
-    .object({ email: z.string().email(), password: z.string().min(4) })
-    .safeParse(req.body);
-  if (!v.success) return res.status(400).json({ error: { code: "BAD_INPUT" } });
-  const { email, password } = v.data;
+  try {
+    const v = z
+      .object({ email: z.string().email(), password: z.string().min(4) })
+      .safeParse(req.body);
+    if (!v.success) return res.status(400).json({ error: { code: "BAD_INPUT" } });
 
-  const user = await db.user.findUnique({
-    where: { email },
-    include: { balance: true },
-  });
-  if (!user) return res.status(400).json({ error: { code: "NO_USER" } });
+    const { email, password } = v.data;
+    const user = await db.user.findUnique({
+      where: { email },
+      include: { balance: true },
+    });
+    if (!user) return res.status(400).json({ error: { code: "NO_USER" } });
 
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return res.status(400).json({ error: { code: "BAD_CRED" } });
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return res.status(400).json({ error: { code: "BAD_CRED" } });
 
-  return res.json({ token: sign(user), user: { id: user.id, email: user.email } });
+    return res.json({
+      token: sign(user),
+      user: { id: user.id, email: user.email },
+    });
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({ error: { code: "LOGIN_FAILED" } });
+  }
 });
 
-// ✅ Wallet Balances
+// ==============================
+// 💰 Wallet Balances
+// ==============================
 app.get("/wallet/balances", auth, async (req, res) => {
   const me = await db.user.findUnique({
     where: { id: req.user.id },
@@ -101,11 +179,16 @@ app.get("/wallet/balances", auth, async (req, res) => {
   return res.json({ JMD: me.balance.jmd, USD: me.balance.usd });
 });
 
-// ✅ Register Nium & Wallet routes
+// ==============================
+// 🔗 Routes
+// ==============================
 app.use("/api/nium", niumRoutes);
 app.use("/api/wallet", walletRoutes);
+app.use("/api/remittance", remittanceRoutes);
 
-// ✅ Transactions endpoint
+// ==============================
+// 💸 Transactions
+// ==============================
 app.get("/wallet/transactions", auth, async (req, res) => {
   const txs = await db.transaction.findMany({
     where: { userId: req.user.id },
@@ -115,7 +198,9 @@ app.get("/wallet/transactions", auth, async (req, res) => {
   res.json(txs);
 });
 
-// ✅ P2P Transfers
+// ==============================
+// 🤝 P2P Transfers
+// ==============================
 const toCents = (n) => Math.round(Number(n) * 100);
 
 app.post("/transfers/p2p", auth, async (req, res) => {
@@ -135,7 +220,8 @@ app.post("/transfers/p2p", auth, async (req, res) => {
     where: { email: toEmail },
     include: { balance: true },
   });
-  if (!receiver) return res.status(400).json({ error: { code: "NO_RECIPIENT" } });
+  if (!receiver)
+    return res.status(400).json({ error: { code: "NO_RECIPIENT" } });
 
   const key = currency.toLowerCase();
   if (sender.balance[key] < amt)
@@ -161,10 +247,14 @@ app.post("/transfers/p2p", auth, async (req, res) => {
     where: { id: sender.id },
     include: { balance: true },
   });
-  res.json({ balances: { JMD: updated.balance.jmd, USD: updated.balance.usd } });
+  res.json({
+    balances: { JMD: updated.balance.jmd, USD: updated.balance.usd },
+  });
 });
 
-// ✅ Bill Payments
+// ==============================
+// 🧾 Bill Payments
+// ==============================
 app.post("/bills/pay", auth, async (req, res) => {
   const { billerId, accountRef, amount, currency } = req.body || {};
   if (!billerId || !accountRef || !amount || !currency)
@@ -200,12 +290,17 @@ app.post("/bills/pay", auth, async (req, res) => {
     where: { id: me.id },
     include: { balance: true },
   });
-  res.json({ balances: { JMD: updated.balance.jmd, USD: updated.balance.usd } });
+  res.json({
+    balances: { JMD: updated.balance.jmd, USD: updated.balance.usd },
+  });
 });
 
-// ✅ Start server
-const port = Number(process.env.PORT || 8080);
+// ==============================
+// 🚀 Start Server
+// ==============================
+const port = Number(process.env.PORT || 4000);
 const host = process.env.HOST || "0.0.0.0";
-app.listen(port, host, () =>
-  console.log(`✅ API listening on http://${host}:${port}`)
-);
+
+app.listen(port, host, () => {
+  console.log(`✅ NovaPay API listening on http://${host}:${port}`);
+});

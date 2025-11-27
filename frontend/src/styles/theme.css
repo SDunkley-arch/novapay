@@ -1,0 +1,201 @@
+/* =========================================================
+   THEME.CSS — Generated from design-tokens.tokens.json
+   ========================================================= */
+
+:root {
+
+  /* ==========================
+     COLORS
+     ========================== */
+
+  /* --- PRIMARY --- */
+  --colors-primary-10: #eff6ffff;
+  --colors-primary-20: #dbeafeff;
+  --colors-primary-40: #60a5faff;
+  --colors-primary-60: #2563ebff;
+  --colors-primary-80: #1d4ed8ff;
+  --colors-primary-90: #1e40afff;
+  --colors-primary-100: #1e3a8aff;
+
+  /* --- SECONDARY --- */
+  --colors-secondary-10: #f0eefeff;
+  --colors-secondary-20: #e1ddfeff;
+  --colors-secondary-40: #b2a6fcff;
+  --colors-secondary-60: #907ffaff;
+  --colors-secondary-80: #7e6bfaff;
+  --colors-secondary-90: #6c56f9ff;
+  --colors-secondary-100: #543af8ff;
+
+  /* --- CHARADE (GRAY SCALE) --- */
+  --colors-charade-10: #e9e9eaff;
+  --colors-charade-20: #d3d4d5ff;
+  --colors-charade-40: #a7a8acff;
+  --colors-charade-60: #7b7d82ff;
+  --colors-charade-80: #4f5159ff;
+  --colors-charade-90: #393c44ff;
+  --colors-charade-100: #23262fff;
+
+  /* --- ALERTS --- */
+  --colors-alerts-success: #00c566ff;
+  --colors-alerts-error: #e53935ff;
+  --colors-alerts-warning: #facc15ff;
+
+  /* --- OTHERS --- */
+  --colors-others-black: #000000ff;
+  --colors-others-white: #ffffffff;
+
+  /* ==========================
+     TYPOGRAPHY
+     ========================== */
+
+  /* === H1 === */
+  --typography-h1-regular-font-size: 24px;
+  --typography-h1-regular-font-family: "Poppins";
+  --typography-h1-regular-font-weight: 400;
+  --typography-h1-regular-line-height: 32px;
+
+  --typography-h1-medium-font-size: 24px;
+  --typography-h1-medium-font-family: "Poppins";
+  --typography-h1-medium-font-weight: 500;
+  --typography-h1-medium-line-height: 32px;
+
+  --typography-h1-semibold-font-size: 24px;
+  --typography-h1-semibold-font-family: "Poppins";
+  --typography-h1-semibold-font-weight: 600;
+  --typography-h1-semibold-line-height: 32px;
+
+  --typography-h1-bold-font-size: 24px;
+  --typography-h1-bold-font-family: "Poppins";
+  --typography-h1-bold-font-weight: 700;
+  --typography-h1-bold-line-height: 32px;
+
+
+  /* === H2 === */
+  --typography-h2-regular-font-size: 22px;
+  --typography-h2-regular-font-family: "Poppins";
+  --typography-h2-regular-font-weight: 400;
+  --typography-h2-regular-line-height: 30px;
+
+  --typography-h2-medium-font-size: 22px;
+  --typography-h2-medium-font-family: "Poppins";
+  --typography-h2-medium-font-weight: 500;
+  --typography-h2-medium-line-height: 30px;
+
+  --typography-h2-semibold-font-size: 22px;
+  --typography-h2-semibold-font-family: "Poppins";
+  --typography-h2-semibold-font-weight: 600;
+  --typography-h2-semibold-line-height: 30px;
+
+  --typography-h2-bold-font-size: 22px;
+  --typography-h2-bold-font-family: "Poppins";
+  --typography-h2-bold-font-weight: 700;
+  --typography-h2-bold-line-height: 30px;
+
+
+  /* === H3 === */
+  --typography-h3-regular-font-size: 20px;
+  --typography-h3-regular-font-family: "Poppins";
+  --typography-h3-regular-font-weight: 400;
+  --typography-h3-regular-line-height: 28px;
+
+  --typography-h3-medium-font-size: 20px;
+  --typography-h3-medium-font-family: "Poppins";
+  --typography-h3-medium-font-weight: 500;
+  --typography-h3-medium-line-height: 28px;
+
+  --typography-h3-semibold-font-size: 20px;
+  --typography-h3-semibold-font-family: "Poppins";
+  --typography-h3-semibold-font-weight: 600;
+  --typography-h3-semibold-line-height: 28px;
+
+  --typography-h3-bold-font-size: 20px;
+  --typography-h3-bold-font-family: "Poppins";
+  --typography-h3-bold-font-weight: 700;
+  --typography-h3-bold-line-height: 28px;
+
+
+  /* === H4 === */
+  --typography-h4-regular-font-size: 18px;
+  --typography-h4-regular-font-family: "Poppins";
+  --typography-h4-regular-font-weight: 400;
+  --typography-h4-regular-line-height: 28px;
+
+  --typography-h4-medium-font-size: 18px;
+  --typography-h4-medium-font-family: "Poppins";
+  --typography-h4-medium-font-weight: 500;
+  --typography-h4-medium-line-height: 28px;
+
+  --typography-h4-semibold-font-size: 18px;
+  --typography-h4-semibold-font-family: "Poppins";
+  --typography-h4-semibold-font-weight: 600;
+  --typography-h4-semibold-line-height: 28px;
+
+  --typography-h4-bold-font-size: 18px;
+  --typography-h4-bold-font-family: "Poppins";
+  --typography-h4-bold-font-weight: 700;
+  --typography-h4-bold-line-height: 28px;
+
+
+  /* === H5 === */
+  --typography-h5-regular-font-size: 16px;
+  --typography-h5-regular-font-family: "Poppins";
+  --typography-h5-regular-font-weight: 400;
+  --typography-h5-regular-line-height: 22px;
+
+  --typography-h5-medium-font-size: 16px;
+  --typography-h5-medium-font-family: "Poppins";
+  --typography-h5-medium-font-weight: 500;
+  --typography-h5-medium-line-height: 22px;
+
+  --typography-h5-semibold-font-size: 16px;
+  --typography-h5-semibold-font-family: "Poppins";
+  --typography-h5-semibold-font-weight: 600;
+  --typography-h5-semibold-line-height: 22px;
+
+  --typography-h5-bold-font-size: 16px;
+  --typography-h5-bold-font-family: "Poppins";
+  --typography-h5-bold-font-weight: 700;
+  --typography-h5-bold-line-height: 22px;
+
+
+  /* === H6 === */
+  --typography-h6-regular-font-size: 14px;
+  --typography-h6-regular-font-family: "Poppins";
+  --typography-h6-regular-font-weight: 400;
+  --typography-h6-regular-line-height: 20px;
+
+  --typography-h6-medium-font-size: 14px;
+  --typography-h6-medium-font-family: "Poppins";
+  --typography-h6-medium-font-weight: 500;
+  --typography-h6-medium-line-height: 20px;
+
+  --typography-h6-semibold-font-size: 14px;
+  --typography-h6-semibold-font-family: "Poppins";
+  --typography-h6-semibold-font-weight: 600;
+  --typography-h6-semibold-line-height: 20px;
+
+  --typography-h6-bold-font-size: 14px;
+  --typography-h6-bold-font-family: "Poppins";
+  --typography-h6-bold-font-weight: 700;
+  --typography-h6-bold-line-height: 20px;
+
+
+  /* === LABEL === */
+  --typography-label-regular-font-size: 12px;
+  --typography-label-regular-font-family: "Poppins";
+  --typography-label-regular-font-weight: 400;
+  --typography-label-regular-line-height: 12px;
+
+  --typography-label-medium-font-size: 12px;
+  --typography-label-medium-font-family: "Poppins";
+  --typography-label-medium-font-weight: 500;
+  --typography-label-medium-line-height: 14px;
+
+  --typography-label-semibold-font-size: 12px;
+  --typography-label-semibold-font-family: "Poppins";
+  --typography-label-semibold-font-weight: 600;
+  --typography-label-semibold-line-height: 14px;
+
+}
+
+/* END OF theme.css */

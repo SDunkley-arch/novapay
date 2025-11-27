@@ -1,84 +1,92 @@
 // Withdraw page component
 import { qs, on, showToast } from '../lib/dom.js';
-import { safeBack } from '../lib/nav.js';
 import { navigate } from '../router.js';
 import { state, updateBalance, addTransaction, canAfford } from '../state.js';
 import { fmtCurrency, parseAmount } from '../utils/format.js';
 
+// Format dollar amount to match dashboard format
+function formatDollarAmount(amount) {
+  const totalUSD = (Number(amount) / 15500);
+  return `$ ${totalUSD.toFixed(2)}`;
+}
+
 let withdrawState = {
   method: null,
   amount: 0,
-  bankAccount: null
+  bankAccount: null,
+  currency: 'JMD'
 };
 
 export function renderWithdraw() {
   const app = qs('#app');
+  if (!app) return;
   
   app.innerHTML = `
-    <div class="container page">
-      <div class="page-header">
-        <button class="back-btn" data-action="nav-back">←</button>
-        <h1 class="page-title">Cash Out</h1>
-        <div></div>
+    <div class="page-container">
+      <!-- Header -->
+      <div class="page-header-modern">
+        <button class="icon-btn" id="btnBackWithdraw">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <h1 class="page-title-modern">Cash Out</h1>
+        <div class="icon-btn-placeholder"></div>
       </div>
-      
-      ${!withdrawState.method ? renderMethodSelection() : renderWithdrawForm()}
+
+      <div class="settings-content">
+        ${!withdrawState.method ? renderMethodSelection() : renderWithdrawForm()}
+      </div>
     </div>
   `;
+  
+  // Back button handler
+  on('click', '#btnBackWithdraw', () => {
+    if (withdrawState.method) {
+      withdrawState.method = null;
+      renderWithdraw();
+    } else {
+      navigate('/dashboard', { animate: 'slide-left-fade' });
+    }
+  });
   
   setupWithdrawListeners();
 }
 
 function renderMethodSelection() {
   return `
-    <div class="card mb-6">
-      <h3 class="text-lg mb-4">Choose withdrawal method</h3>
-      
-      <div class="method-list">
-        <div class="method-item" data-method="bank">
-          <div class="flex items-center gap-4">
-            <div class="text-2xl">🏦</div>
-            <div>
-              <h4 class="font-semibold">Bank Transfer</h4>
-              <p class="text-muted text-sm">Transfer to your bank account</p>
-              <p class="text-xs text-success">Free • 1-2 business days</p>
-            </div>
-          </div>
-          <div class="text-muted">→</div>
+    <div class="form-field">
+      <h3 class="section-title-sm">Choose Withdrawal Method</h3>
+      <p class="form-hint" style="margin-bottom: 20px;">
+        Select how you would like to withdraw your funds.
+      </p>
+    </div>
+
+    <div class="withdraw-methods">
+      <div class="withdraw-method-card" data-method="bank">
+        <div class="withdraw-method-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
         </div>
-        
-        <div class="method-item" data-method="agent">
-          <div class="flex items-center gap-4">
-            <div class="text-2xl">🏪</div>
-            <div>
-              <h4 class="font-semibold">Cash Agent</h4>
-              <p class="text-muted text-sm">Pick up cash at agent location</p>
-              <p class="text-xs text-success">J$50 fee • Instant</p>
-            </div>
-          </div>
-          <div class="text-muted">→</div>
+        <div class="withdraw-method-info">
+          <h4 class="withdraw-method-name">Bank Transfer</h4>
+          <p class="withdraw-method-desc">Transfer to your bank account</p>
+          <p class="withdraw-method-meta">Free • 1-2 business days</p>
         </div>
       </div>
     </div>
-    
-    <div class="card">
-      <h3 class="text-lg mb-4">Available Balance</h3>
-      <div class="text-center">
-        <div class="text-3xl font-bold text-accent mb-2">
-          ${fmtCurrency(state.balances.JMD, 'JMD')}
-        </div>
-        <p class="text-muted">Ready to withdraw</p>
-      </div>
-    </div>
+
+    <section class="np-balance-section withdraw-balance-section">
+      <p class="np-balance-title">Available Balance</p>
+      <p class="np-balance-amount">${formatDollarAmount(state.balances.JMD || 0)}</p>
+    </section>
   `;
 }
 
 function renderWithdrawForm() {
-  if (withdrawState.method === 'bank') {
-    return renderBankWithdraw();
-  } else if (withdrawState.method === 'agent') {
-    return renderAgentWithdraw();
-  }
+  return renderBankWithdraw();
 }
 
 function renderBankWithdraw() {
@@ -88,163 +96,166 @@ function renderBankWithdraw() {
   ];
   
   return `
-    <div class="card">
-      <div class="flex items-center gap-4 mb-6">
-        <div class="text-3xl">🏦</div>
-        <div>
-          <h3 class="text-lg font-semibold">Bank Transfer</h3>
-          <p class="text-muted">Transfer to your bank account</p>
-        </div>
-      </div>
-      
-      <form id="bankWithdrawForm">
-        <div class="form-group">
-          <label class="form-label">Select Bank Account</label>
-          
+    <div class="form-field">
+      <h3 class="section-title-sm">Bank Transfer</h3>
+      <p class="form-hint" style="margin-bottom: 20px;">
+        Transfer funds directly to your linked bank account.
+      </p>
+    </div>
+    
+    <form id="bankWithdrawForm">
+      <div class="form-field">
+        <label class="form-label">Select Bank Account</label>
+        
+        <div class="bank-accounts-list">
           ${savedAccounts.map(account => `
-            <div class="bank-account-item" data-account='${JSON.stringify(account)}'>
-              <div class="flex items-center gap-4">
-                <div class="text-xl">🏦</div>
-                <div>
-                  <h4 class="font-semibold">${account.bank}</h4>
-                  <p class="text-muted text-sm">${account.account} • ${account.name}</p>
-                </div>
+            <div class="bank-account-card" data-account='${JSON.stringify(account)}'>
+              <div class="bank-account-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
               </div>
-              <input type="radio" name="bankAccount" value="${account.id}">
+              <div class="bank-account-info">
+                <h4 class="bank-account-name">${account.bank}</h4>
+                <p class="bank-account-number">${account.account} • ${account.name}</p>
+              </div>
+              <input type="radio" name="bankAccount" value="${account.id}" class="bank-account-radio">
             </div>
           `).join('')}
           
-          <div class="bank-account-item" data-action="add-account">
-            <div class="flex items-center gap-4">
-              <div class="text-xl">➕</div>
-              <div>
-                <h4 class="font-semibold">Add New Account</h4>
-                <p class="text-muted text-sm">Link a new bank account</p>
-              </div>
+          <div class="bank-account-card add-account" data-action="add-account">
+            <div class="bank-account-icon add-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
             </div>
-            <div class="text-muted">→</div>
+            <div class="bank-account-info">
+              <h4 class="bank-account-name">Add New Account</h4>
+              <p class="bank-account-number">Link a new bank account</p>
+            </div>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="withdrawAmount">Amount (JMD)</label>
-          <div class="flex items-center">
-            <span class="currency-symbol text-xl mr-2">J$</span>
-            <input 
-              type="text" 
-              id="withdrawAmount" 
-              class="form-input" 
-              placeholder="0.00"
-              inputmode="numeric"
-              required
-            >
-          </div>
-          <p class="text-xs text-muted mt-1">
-            Available: ${fmtCurrency(state.balances.JMD, 'JMD')}
-          </p>
+      </div>
+      
+      <div class="form-field">
+        <label class="form-label" for="withdrawAmount">Amount</label>
+        <div class="input-group">
+          <select id="withdrawCurrency" class="form-input-modern currency-select">
+            <option value="JMD">JMD</option>
+            <option value="USD">USD</option>
+          </select>
+          <input
+            type="text"
+            id="withdrawAmount"
+            class="form-input-modern amount-input"
+            placeholder="0.00"
+            inputmode="decimal"
+            required
+          />
         </div>
-        
-        <div class="grid grid-2 gap-4 mb-6">
-          <button type="button" class="btn btn-secondary" data-quick-amount="5000">J$5,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="10000">J$10,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="25000">J$25,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="50000">J$50,000</button>
+        <p class="form-hint">Available: ${fmtCurrency(state.balances.JMD || 0, 'JMD')}</p>
+      </div>
+      
+      <div class="form-field">
+        <h3 class="section-title-sm">Quick Amounts</h3>
+        <div class="quick-amount-grid">
+          <button type="button" class="quick-amount-btn" data-quick-amount="5000">J$5,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="10000">J$10,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="25000">J$25,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="50000">J$50,000</button>
         </div>
-        
-        <div class="flex gap-4">
-          <button type="button" class="btn btn-secondary flex-1" data-action="withdraw-back">
-            Back
-          </button>
-          <button type="submit" class="btn btn-primary flex-1" data-testid="btnConfirmWithdraw">
-            Withdraw
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+      
+      <div class="form-field">
+        <button type="submit" class="btn-primary-modern" data-testid="btnConfirmWithdraw">
+          Withdraw Funds
+        </button>
+      </div>
+    </form>
   `;
 }
 
 function renderAgentWithdraw() {
   return `
-    <div class="card">
-      <div class="flex items-center gap-4 mb-6">
-        <div class="text-3xl">🏪</div>
-        <div>
-          <h3 class="text-lg font-semibold">Cash Agent</h3>
-          <p class="text-muted">Pick up cash at any agent location</p>
+    <div class="form-field">
+      <h3 class="section-title-sm">Cash Agent Withdrawal</h3>
+      <p class="form-hint" style="margin-bottom: 20px;">
+        Generate a code to pick up cash at any NovaPay agent location.
+      </p>
+    </div>
+    
+    <form id="agentWithdrawForm">
+      <div class="form-field">
+        <label class="form-label" for="agentAmount">Amount</label>
+        <div class="input-group">
+          <select id="agentCurrency" class="form-input-modern currency-select">
+            <option value="JMD">JMD</option>
+          </select>
+          <input
+            type="text"
+            id="agentAmount"
+            class="form-input-modern amount-input"
+            placeholder="0.00"
+            inputmode="decimal"
+            required
+          />
+        </div>
+        <p class="form-hint">Available: ${fmtCurrency(state.balances.JMD || 0, 'JMD')} • Fee: J$50</p>
+      </div>
+      
+      <div class="form-field">
+        <h3 class="section-title-sm">Quick Amounts</h3>
+        <div class="quick-amount-grid">
+          <button type="button" class="quick-amount-btn" data-quick-amount="2000">J$2,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="5000">J$5,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="10000">J$10,000</button>
+          <button type="button" class="quick-amount-btn" data-quick-amount="20000">J$20,000</button>
         </div>
       </div>
       
-      <form id="agentWithdrawForm">
-        <div class="form-group">
-          <label class="form-label" for="agentAmount">Amount (JMD)</label>
-          <div class="flex items-center">
-            <span class="currency-symbol text-xl mr-2">J$</span>
-            <input 
-              type="text" 
-              id="agentAmount" 
-              class="form-input" 
-              placeholder="0.00"
-              inputmode="numeric"
-              required
-            >
-          </div>
-          <p class="text-xs text-muted mt-1">
-            Available: ${fmtCurrency(state.balances.JMD, 'JMD')} • Fee: J$50
-          </p>
-        </div>
-        
-        <div class="grid grid-2 gap-4 mb-6">
-          <button type="button" class="btn btn-secondary" data-quick-amount="2000">J$2,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="5000">J$5,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="10000">J$10,000</button>
-          <button type="button" class="btn btn-secondary" data-quick-amount="20000">J$20,000</button>
-        </div>
-        
-        <div class="p-4 bg-yellow-50 rounded-lg mb-6">
-          <h4 class="font-semibold text-yellow-800 mb-2">How it works:</h4>
-          <ol class="text-sm text-yellow-700 space-y-1">
+      <div class="form-field">
+        <div class="info-card">
+          <h4 class="info-card-title">How it works:</h4>
+          <ol class="info-card-list">
             <li>1. Confirm your withdrawal</li>
             <li>2. Get your one-time pickup code</li>
             <li>3. Visit any NovaPay agent</li>
             <li>4. Show your ID and pickup code</li>
           </ol>
         </div>
-        
-        <div class="flex gap-4">
-          <button type="button" class="btn btn-secondary flex-1" data-action="withdraw-back">
-            Back
-          </button>
-          <button type="submit" class="btn btn-primary flex-1">
-            Generate Code
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+      
+      <div class="form-field">
+        <button type="submit" class="btn-primary-modern">
+          Generate Pickup Code
+        </button>
+      </div>
+    </form>
   `;
 }
 
 function setupWithdrawListeners() {
   const app = qs('#app');
-  
-  // Header back (history-aware)
-  on(app, '[data-action="nav-back"]', 'click', () => {
-    if (history.length > 1) {
-      history.back();
-    } else {
-      navigate('/dashboard');
-    }
-  });
 
   // Method selection
-  on(app, '.method-item', 'click', (e) => {
+  on(app, '.withdraw-method-card', 'click', (e) => {
     const method = e.currentTarget.dataset.method;
     withdrawState.method = method;
+    
+    // If bank method is selected, navigate to bank selection page
+    if (method === 'bank') {
+      navigate('/bank-selection', { animate: 'slide-right-fade' });
+      return;
+    }
+    
     renderWithdraw();
   });
   
   // Bank account selection
-  on(app, '.bank-account-item', 'click', (e) => {
+  on(app, '.bank-account-card', 'click', (e) => {
     if (e.currentTarget.dataset.action === 'add-account') {
       showToast('Add bank account feature coming soon!', 'info');
       return;
@@ -258,8 +269,13 @@ function setupWithdrawListeners() {
     }
   });
   
+  // Currency selection
+  on(app, '#withdrawCurrency, #agentCurrency', 'change', (e) => {
+    withdrawState.currency = e.target.value;
+  });
+  
   // Quick amount buttons
-  on(app, '[data-quick-amount]', 'click', (e) => {
+  on(app, '.quick-amount-btn', 'click', (e) => {
     const amount = e.currentTarget.dataset.quickAmount;
     const amountInput = qs('#withdrawAmount') || qs('#agentAmount');
     if (amountInput) {
@@ -279,6 +295,7 @@ function setupWithdrawListeners() {
     e.preventDefault();
     
     const amount = parseAmount(qs('#withdrawAmount').value);
+    const currency = qs('#withdrawCurrency').value;
     const selectedAccount = qs('input[name="bankAccount"]:checked');
     
     if (!selectedAccount) {
@@ -296,6 +313,7 @@ function setupWithdrawListeners() {
       return;
     }
     
+    withdrawState.currency = currency;
     processWithdrawal(amount, 'BANK_TRANSFER');
   });
   
@@ -304,6 +322,7 @@ function setupWithdrawListeners() {
     e.preventDefault();
     
     const amount = parseAmount(qs('#agentAmount').value);
+    const currency = qs('#agentCurrency').value;
     const fee = 50;
     const total = amount + fee;
     
@@ -317,14 +336,9 @@ function setupWithdrawListeners() {
       return;
     }
     
+    withdrawState.currency = currency;
     // Show pickup code
     showPickupCode(amount);
-  });
-
-  // Back buttons within forms
-  on(app, '[data-action="withdraw-back"]', 'click', () => {
-    withdrawState.method = null;
-    renderWithdraw();
   });
   
   // Complete agent withdrawal
@@ -341,8 +355,8 @@ function setupWithdrawListeners() {
       type: 'WITHDRAW'
     });
     showToast('Withdrawal completed successfully!', 'success');
-    withdrawState = { method: null, amount: 0, bankAccount: null };
-    navigate('/dashboard');
+    withdrawState = { method: null, amount: 0, bankAccount: null, currency: 'JMD' };
+    navigate('/dashboard', { animate: 'slide-left-fade' });
   });
 }
 
@@ -353,22 +367,22 @@ function processWithdrawal(amount, type) {
   
   setTimeout(() => {
     // Debit balance
-    updateBalance('JMD', -amount);
+    updateBalance(withdrawState.currency, -amount);
     
     // Add transaction
     addTransaction({
       title: 'Bank Withdrawal',
       amount: -amount,
-      currency: 'JMD',
+      currency: withdrawState.currency,
       type: 'WITHDRAW'
     });
     
-    showToast(`Withdrawal of ${fmtCurrency(amount, 'JMD')} initiated`, 'success');
+    showToast(`Withdrawal of ${fmtCurrency(amount, withdrawState.currency)} initiated`, 'success');
     
     // Reset state
-    withdrawState = { method: null, amount: 0, bankAccount: null };
+    withdrawState = { method: null, amount: 0, bankAccount: null, currency: 'JMD' };
     
-    navigate('/dashboard');
+    navigate('/dashboard', { animate: 'slide-left-fade' });
   }, 2000);
 }
 
@@ -379,79 +393,328 @@ function showPickupCode(amount) {
   
   const app = qs('#app');
   app.innerHTML = `
-    <div class="container page">
-      <div class="page-header">
-        <div></div>
-        <h1 class="page-title">Pickup Code</h1>
-        <div></div>
+    <div class="page-container">
+      <!-- Header -->
+      <div class="page-header-modern">
+        <div class="icon-btn-placeholder"></div>
+        <h1 class="page-title-modern">Pickup Code</h1>
+        <div class="icon-btn-placeholder"></div>
       </div>
-      
-      <div class="card text-center">
-        <div class="text-6xl mb-4">✅</div>
-        <h3 class="text-lg font-semibold mb-2">Withdrawal Approved</h3>
-        <p class="text-muted mb-6">Your cash is ready for pickup</p>
-        
-        <div class="p-6 bg-accent-light rounded-lg mb-6">
-          <h4 class="font-semibold mb-2">Pickup Code</h4>
-          <div class="text-3xl font-mono font-bold text-accent">${pickupCode}</div>
+
+      <div class="settings-content">
+        <div class="form-field text-center">
+          <div class="success-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3 class="section-title-sm text-center">Withdrawal Approved</h3>
+          <p class="form-hint text-center" style="margin-bottom: 24px;">
+            Your cash is ready for pickup
+          </p>
         </div>
         
-        <div class="space-y-2 mb-6 text-left">
-          <div class="flex justify-between">
-            <span class="text-muted">Amount:</span>
-            <span>${fmtCurrency(amount, 'JMD')}</span>
+        <div class="pickup-code-card">
+          <h4 class="pickup-code-label">Pickup Code</h4>
+          <div class="pickup-code">${pickupCode}</div>
+        </div>
+        
+        <div class="form-field">
+          <h3 class="section-title-sm">Transaction Details</h3>
+        </div>
+
+        <div class="transaction-details">
+          <div class="transaction-detail-row">
+            <span class="transaction-detail-label">Amount</span>
+            <span class="transaction-detail-value">${fmtCurrency(amount, 'JMD')}</span>
           </div>
-          <div class="flex justify-between">
-            <span class="text-muted">Fee:</span>
-            <span>${fmtCurrency(fee, 'JMD')}</span>
+
+          <div class="transaction-detail-row">
+            <span class="transaction-detail-label">Fee</span>
+            <span class="transaction-detail-value">${fmtCurrency(fee, 'JMD')}</span>
           </div>
-          <hr>
-          <div class="flex justify-between font-semibold">
-            <span>Total Deducted:</span>
-            <span>${fmtCurrency(total, 'JMD')}</span>
+
+          <div class="transaction-detail-divider"></div>
+
+          <div class="transaction-detail-row total-row">
+            <span class="transaction-detail-label">Total Deducted</span>
+            <span class="transaction-detail-value total-value">${fmtCurrency(total, 'JMD')}</span>
           </div>
         </div>
         
-        <div class="p-4 bg-blue-50 rounded-lg mb-6 text-left">
-          <h4 class="font-semibold text-blue-800 mb-2">Instructions:</h4>
-          <ul class="text-sm text-blue-700 space-y-1">
-            <li>• Visit any NovaPay agent within 24 hours</li>
-            <li>• Bring a valid ID</li>
-            <li>• Provide this pickup code</li>
-            <li>• Code expires in 24 hours</li>
-          </ul>
+        <div class="form-field">
+          <div class="info-card info-card-blue">
+            <h4 class="info-card-title">Instructions:</h4>
+            <ul class="info-card-list">
+              <li>• Visit any NovaPay agent within 24 hours</li>
+              <li>• Bring a valid ID</li>
+              <li>• Provide this pickup code</li>
+              <li>• Code expires in 24 hours</li>
+            </ul>
+          </div>
         </div>
         
-        <button class="btn btn-primary btn-full" data-action="agent-complete" data-total="${total}">
-          Done
-        </button>
+        <div class="form-field">
+          <button class="btn-primary-modern" data-action="agent-complete" data-total="${total}">
+            Done
+          </button>
+        </div>
       </div>
     </div>
   `;
 }
 
-// Add styles
+// Add styles for the Withdraw page to match Remittance page
 const style = document.createElement('style');
 style.textContent = `
-  .method-item, .bank-account-item {
+  /* Withdraw method cards styling */
+  .withdraw-methods {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .withdraw-method-card {
+    display: flex;
     align-items: center;
-    padding: 1rem;
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
+    gap: 16px;
+    padding: 16px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-bottom: 0.5rem;
+    position: relative;
   }
   
-  .method-item:hover, .bank-account-item:hover {
-    border-color: var(--primary);
-    background-color: rgba(124, 58, 237, 0.08);
+  .withdraw-method-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(84, 58, 248, 0.15);
   }
   
-  .flex-1 { flex: 1; }
-  .space-y-1 > * + * { margin-top: 0.25rem; }
-  .space-y-2 > * + * { margin-top: 0.5rem; }
+  .withdraw-method-card:active {
+    transform: translateY(0);
+  }
+  
+  .withdraw-method-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(84, 58, 248, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--colorssecondary-100);
+    flex-shrink: 0;
+  }
+  
+  .withdraw-method-info {
+    flex: 1;
+  }
+  
+  .withdraw-method-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--colorscharade-100);
+    margin-bottom: 4px;
+  }
+  
+  .withdraw-method-desc {
+    font-size: 13px;
+    color: var(--colorscharade-60);
+    margin-bottom: 4px;
+  }
+  
+  .withdraw-method-meta {
+    font-size: 12px;
+    color: var(--colorsalertssuccess);
+  }
+  
+  /* Balance card styling */
+  .balance-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+  }
+  
+  .balance-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--colorssecondary-100);
+    margin-bottom: 8px;
+  }
+  
+  .balance-label {
+    font-size: 14px;
+    color: var(--colorscharade-60);
+  }
+  
+  /* Bank account cards styling */
+  .bank-accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .bank-account-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .bank-account-card:hover {
+    border-color: var(--colorssecondary-100);
+    box-shadow: 0 4px 12px rgba(84, 58, 248, 0.1);
+  }
+  
+  .bank-account-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(84, 58, 248, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--colorssecondary-100);
+    flex-shrink: 0;
+  }
+  
+  .add-icon {
+    background: rgba(0, 197, 102, 0.1);
+    color: var(--colorsalertssuccess);
+  }
+  
+  .bank-account-info {
+    flex: 1;
+  }
+  
+  .bank-account-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--colorscharade-100);
+    margin-bottom: 4px;
+  }
+  
+  .bank-account-number {
+    font-size: 13px;
+    color: var(--colorscharade-60);
+  }
+  
+  .bank-account-radio {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--colorssecondary-100);
+    margin-right: 8px;
+  }
+  
+  /* Pickup code styling */
+  .pickup-code-card {
+    background: rgba(84, 58, 248, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .pickup-code-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--colorscharade-80);
+    margin-bottom: 8px;
+  }
+  
+  .pickup-code {
+    font-family: monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--colorssecondary-100);
+    letter-spacing: 2px;
+  }
+  
+  /* Info card styling */
+  .info-card {
+    background: #F8F9FF;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .info-card-blue {
+    background: #EBF3FF;
+  }
+  
+  .info-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--colorscharade-90);
+    margin-bottom: 12px;
+  }
+  
+  .info-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .info-card-list li {
+    font-size: 14px;
+    color: var(--colorscharade-80);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(0, 197, 102, 0.1);
+    color: var(--colorsalertssuccess);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Match dashboard balance section */
+  .withdraw-balance-section {
+    padding: 0;
+    margin-bottom: 24px;
+  }
+  
+  .np-balance-section {
+    padding: 0 24px;
+    margin-bottom: 24px;
+  }
+  
+  .np-balance-title {
+    font-size: 14px;
+    color: var(--colorscharade-60);
+    margin-bottom: 8px;
+  }
+  
+  .np-balance-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--colorscharade-100);
+    margin: 0;
+  }
 `;
 document.head.appendChild(style);

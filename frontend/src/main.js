@@ -3,9 +3,15 @@ import './style.css';
 import './styles.css';
 import './styles/dashboard.css';
 import './styles/pages.css';
+import './styles/global.css'; // Global styles for scrolling and layout fixes
+import './styles/auth-fix.css'; // Additional fixes for auth pages
+import './styles/fullscreen.css'; // Full-screen edge-to-edge display styles
+import './styles/recentTransactions.css'; // New Recent Transactions block styles
 
 import { loadToken } from './api.js';
 import { navigate } from './router.js';
+import { initSessionManager, checkFirstLaunch } from './session-manager.js';
+import { initViewportFix } from './viewport-fix.js';
 
 console.log('[NovaPay] Vite frontend initializing...');
 
@@ -22,6 +28,17 @@ try {
 // 2. Initialize Routing
 // ============================
 function initApp() {
+  // Initialize viewport fix for mobile devices
+  initViewportFix();
+  
+  // Check if this is the first launch on this device
+  const isFirstTime = checkFirstLaunch();
+  
+  if (!isFirstTime) {
+    // Initialize session manager for timeout tracking
+    initSessionManager();
+  }
+  
   if (!location.hash || location.hash === '#/' || location.hash === '') {
     console.log('[NovaPay] No hash detected, redirecting to /login');
     navigate('/login');
