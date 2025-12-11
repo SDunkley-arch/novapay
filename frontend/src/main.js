@@ -7,6 +7,9 @@ import './styles/global.css'; // Global styles for scrolling and layout fixes
 import './styles/auth-fix.css'; // Additional fixes for auth pages
 import './styles/fullscreen.css'; // Full-screen edge-to-edge display styles
 import './styles/recentTransactions.css'; // New Recent Transactions block styles
+import './styles/floating-transactions.css'; // Floating Apple Wallet style transactions card
+import './styles/bottom-nav.css'; // New bottom navigation bar styling
+import './styles/wallet-dashboard.css'; // New wallet dashboard premium design
 
 import { loadToken } from './api.js';
 import { navigate } from './router.js';
@@ -30,15 +33,15 @@ try {
 function initApp() {
   // Initialize viewport fix for mobile devices
   initViewportFix();
-  
+
   // Check if this is the first launch on this device
   const isFirstTime = checkFirstLaunch();
-  
+
   if (!isFirstTime) {
     // Initialize session manager for timeout tracking
     initSessionManager();
   }
-  
+
   if (!location.hash || location.hash === '#/' || location.hash === '') {
     console.log('[NovaPay] No hash detected, redirecting to /login');
     navigate('/login');

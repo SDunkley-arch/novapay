@@ -8,17 +8,17 @@ const REMEMBER_ME_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export function renderLogin(params = {}) {
   const app = qs('#app');
-  
+
   // Check if there's a timeout message from the router
-  const timeoutMessage = window.location.hash.includes('timeout=true') ? 
+  const timeoutMessage = window.location.hash.includes('timeout=true') ?
     'Your session has expired due to inactivity. Please log in again.' : '';
-  
+
   // Check if this is a first launch on a new device
   const isFirstLaunch = localStorage.getItem('novapay_first_launch') === null;
   if (isFirstLaunch) {
     localStorage.setItem('novapay_first_launch', 'false');
   }
-  
+
   app.innerHTML = `
     ${timeoutMessage ? `<div class="timeout-message">${timeoutMessage}</div>` : ''}
     <div class="auth-container">
@@ -36,16 +36,7 @@ export function renderLogin(params = {}) {
         <!-- Logo & Title -->
         <div class="auth-brand">
           <div class="auth-logo">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <rect width="48" height="48" rx="12" fill="url(#gradient)"/>
-              <path d="M24 14v20M14 24h20" stroke="white" stroke-width="3" stroke-linecap="round"/>
-              <defs>
-                <linearGradient id="gradient" x1="0" y1="0" x2="48" y2="48">
-                  <stop offset="0%" stop-color="#543AF8"/>
-                  <stop offset="100%" stop-color="#9333EA"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <img src="/assets/np-logo.png" alt="NovaPay Logo" width="100" height="100" style="object-fit: contain; border-radius: 12px;">
           </div>
           <h1 class="auth-title">Welcome Back</h1>
           <p class="auth-subtitle">Let's sign you in!</p>
@@ -111,50 +102,50 @@ export function renderLogin(params = {}) {
       </div>
     </div>
   `;
-  
+
   // Event listeners
   on('click', '[data-testid="btnBack"]', () => {
     navigate('/landing');
   });
-  
+
   on('click', '#forgotPassword', (e) => {
     e.preventDefault();
     navigate('/forgot-password', { animate: 'slide-right-fade' });
   });
   // Log API URL for debugging
   console.log('[NovaPay] Login page loaded, API URL:', API_BASE_URL);
-  
+
   on('submit', '#loginForm', async (e) => {
     e.preventDefault();
-  
+
     const email = qs('#email').value.trim();
     const password = qs('#password').value;
     const rememberMeCheckbox = qs('#rememberMe');
     const rememberMeChecked = !!rememberMeCheckbox && rememberMeCheckbox.checked;
-  
+
     if (!email) { showToast('Please enter your email address', 'error'); return; }
     if (!password) { showToast('Please enter your password', 'error'); return; }
-    
+
     // Check network connectivity before attempting login
     if (!navigator.onLine) {
       showToast('No internet connection. Please check your network settings.', 'error');
       return;
     }
-    
+
     // Log request details for debugging
     console.log('[NovaPay] Attempting login for:', email, 'to URL:', `${API_BASE_URL}/auth/login`);
-  
+
     const btn = qs('[data-testid="btnLogin"]');
     btn.textContent = 'Signing In...';
     btn.disabled = true;
-  
+
     try {
       // Call backend
       const out = await api('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password })
       });
-  
+
       // Persist token for subsequent requests (respect Remember me)
       setToken(out.token, {
         persist: rememberMeChecked,
@@ -189,7 +180,7 @@ export function renderLogin(params = {}) {
       // Enhanced error extraction and user-friendly messages
       const code = err?.error?.code || err?.message || 'LOGIN_FAILED';
       let msg = 'Unable to sign in';
-      
+
       // Handle specific error codes
       if (code === 'BAD_CRED') {
         msg = 'Invalid email or password';
@@ -206,7 +197,7 @@ export function renderLogin(params = {}) {
       } else if (code === 'ConnectException' || (err.message && err.message.includes('Failed to connect'))) {
         msg = 'Cannot connect to server. Please ensure the server is running and accessible.';
       }
-      
+
       // Log detailed error information
       console.error('Login Error:', {
         code,
@@ -214,10 +205,10 @@ export function renderLogin(params = {}) {
         stack: err.stack,
         error: err
       });
-      
+
       // Show toast with appropriate message
       showToast(msg, 'error');
-      
+
       // Log additional diagnostic information
       console.log('[NovaPay] API Base URL:', API_BASE_URL);
       console.log('[NovaPay] Network Status:', navigator.onLine ? 'Online' : 'Offline');
@@ -227,6 +218,6 @@ export function renderLogin(params = {}) {
       btn.disabled = false;
     }
   });
-  
-  
- }
+
+
+}

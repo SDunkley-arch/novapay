@@ -2,39 +2,22 @@ import { qs, on, showToast } from '../lib/dom.js';
 import { api } from '../api.js';
 import { navigate } from '../router.js';
 import { state } from '../state.js';
-import sendIcon from '../../assets/Send.png';
-import receiveIcon from '../../assets/Receive.png';
-import walletIcon from '../../assets/wallet.png';
-import withdrawIcon from '../../assets/withdraw.png';
-import dollarReceiveIcon from '../../assets/dollar-receive-square.png';
-import qrScanIcon from '../../assets/QR Scan.png';
 import bellIcon from '../../assets/Bell.png';
-import homeIcon from '../../assets/Home.png';
-import statisticsIcon from '../../assets/Statistics.png';
-import cardsIcon from '../../assets/Cards.png';
-import settingsIcon from '../../assets/Settings.png';
-import flowAvatar from '../../assets/Flow.png';
-import wuAvatar from '../../assets/WU.png';
-import pricemartAvatar from '../../assets/Pricemart.png';
-import topUpIcon from '../../assets/TopUp.png';
-
-// Ionicons CDN will be loaded via index.html
 
 export function renderDashboard() {
   const app = qs('#app');
 
-  // derive a friendly name
-  const name =
-    state?.session?.user?.name ||
+  // Derive user name
+  const fullName = state?.session?.user?.name ||
     (state?.session?.user?.email ? state.session.user.email.split('@')[0] : 'User');
-  
-  const email = state?.session?.user?.email || '';
-  const initials = name.substring(0, 2).toUpperCase();
+  const firstName = fullName.split(' ')[0];
+  const initials = firstName.substring(0, 2).toUpperCase();
 
   const unreadCount = Array.isArray(state.notifications) ? state.notifications.length : 0;
   const hasUnread = unreadCount > 0;
   const unreadLabel = unreadCount > 9 ? '9+' : String(unreadCount);
 
+  // Get avatar from localStorage
   const avatarImage = (() => {
     try {
       return localStorage.getItem('novapay_profile_picture');
@@ -43,264 +26,230 @@ export function renderDashboard() {
     }
   })();
 
-  const avatarInnerHtml = avatarImage
-    ? '<img src="' + avatarImage + '" alt="' + name + '" class="np-avatar-img" />'
-    : initials;
+  const avatarHtml = avatarImage
+    ? `<img src="${avatarImage}" alt="${firstName}" class="wallet-avatar-img" />`
+    : `<span class="wallet-avatar-initials">${initials}</span>`;
 
   app.innerHTML = `
-    <div class="dashboard-container">
-      <!-- Header Section -->
-      <header class="np-top-nav">
-        <div class="np-avatar-wrapper">
-          <div class="np-avatar-circle">${avatarInnerHtml}</div>
-        </div>
-        <button class="np-bell-btn${hasUnread ? ' np-bell-nudge' : ''}" type="button" aria-label="Notifications">
-          <img src="${bellIcon}" alt="Notifications" class="np-bell-img" />
-          ${hasUnread ? `<span class="np-bell-badge">${unreadLabel}</span>` : ''}
-        </button>
-      </header>
+    <div class="wallet-dashboard">
+      <!-- Background with frosted overlay -->
+      <div class="wallet-bg">
+        <div class="wallet-bg-image"></div>
+        <div class="wallet-bg-frost"></div>
+      </div>
 
-      <!-- Balance Section -->
-      <section class="np-balance-section">
-        <p class="np-balance-title">Current Wallet Balance</p>
-        <p class="np-balance-amount" id="wallet-balance">$ 5,323.00</p>
-      </section>
-
-      <!-- Send / Receive Main Actions -->
-      <section class="np-main-actions">
-        <button class="np-main-action np-main-action-send" type="button">
-          <div class="np-main-action-circle">
-            <img src="${sendIcon}" alt="Send" class="np-main-action-img" />
+      <!-- Main Content -->
+      <div class="wallet-content">
+        <!-- Top Header: Avatar, Greeting, Bell -->
+        <header class="wallet-header">
+          <div class="wallet-user">
+            <div class="wallet-avatar" id="walletAvatar">
+              ${avatarHtml}
+            </div>
+            <span class="wallet-greeting">Hello, ${firstName}</span>
           </div>
-          <span class="np-main-action-label">Send</span>
-        </button>
-        <button class="np-main-action np-main-action-receive" type="button">
-          <div class="np-main-action-circle">
-            <img src="${receiveIcon}" alt="Receive" class="np-main-action-img" />
-          </div>
-          <span class="np-main-action-label">Receive</span>
-        </button>
-      </section>
-
-      <!-- Insight Card -->
-      <section class="np-insight-card">
-        <div class="np-insight-left">
-          <div class="np-insight-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-              <polyline points="4 19 10 11 14 15 20 5"></polyline>
-              <polyline points="4 4 4 19 21 19"></polyline>
+          <button class="wallet-bell${hasUnread ? ' wallet-bell-active' : ''}" id="walletBell" type="button" aria-label="Notifications">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
+            ${hasUnread ? `<span class="wallet-bell-badge">${unreadLabel}</span>` : ''}
+          </button>
+        </header>
+
+        <!-- Balance Section -->
+        <section class="wallet-balance-section">
+          <p class="wallet-balance-label">Wallet balance</p>
+          <h1 class="wallet-balance-amount" id="walletBalance">$155,832<span class="wallet-balance-cents">.00</span></h1>
+          
+          <!-- Change Indicators -->
+          <div class="wallet-indicators">
+            <div class="wallet-indicator wallet-indicator-positive">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="18 15 12 9 6 15"/>
+              </svg>
+              <span id="positiveChange">+2,340</span>
+            </div>
+            <div class="wallet-indicator wallet-indicator-negative">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+              <span id="negativeChange">-1,645</span>
+            </div>
           </div>
-          <div class="np-insight-copy">
-            <div class="np-insight-title">Insight</div>
-            <div class="np-insight-subtitle">Balance trend</div>
+        </section>
+
+        <!-- Action Bar - matching reference design -->
+        <div class="wallet-action-bar">
+          <div class="wallet-action-bar-inner">
+            <button class="wallet-action" id="actionTransfer" type="button">
+              <div class="wallet-action-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+              </div>
+              <span class="wallet-action-label">Transfer</span>
+            </button>
+            
+            <button class="wallet-action" id="actionWithdraw" type="button">
+              <div class="wallet-action-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="17" y1="7" x2="7" y2="17"/>
+                  <polyline points="17 17 7 17 7 7"/>
+                </svg>
+              </div>
+              <span class="wallet-action-label">Withdraw</span>
+            </button>
+            
+            <button class="wallet-action-grid" id="actionMenu" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="4" y="4" width="6" height="6" rx="1"/>
+                <rect x="14" y="4" width="6" height="6" rx="1"/>
+                <rect x="4" y="14" width="6" height="6" rx="1"/>
+                <rect x="14" y="14" width="6" height="6" rx="1"/>
+              </svg>
+            </button>
           </div>
         </div>
-        <div class="np-insight-right">
-          <div id="weekly-cashflow-amount" class="np-insight-balance">$0.00</div>
-          <div id="weekly-cashflow-percent" class="np-insight-trend">0% change</div>
+      </div>
+
+      <!-- Quick Send Scroller Card -->
+      <section class="quick-send-card">
+        <div class="quick-send-header">
+          <div class="quick-send-title-row">
+            <span class="quick-send-title">Quick send</span>
+            <span class="quick-send-count">8</span>
+          </div>
+          <button class="quick-send-menu" type="button" aria-label="More options">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#111111">
+              <circle cx="12" cy="5" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="12" cy="19" r="2"/>
+            </svg>
+          </button>
         </div>
-        <button type="button" class="np-insight-close" aria-label="Dismiss insight">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFCFCF" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+        <div class="quick-send-avatars">
+          <div class="quick-send-avatar" data-user="nina">
+            <div class="quick-send-avatar-img">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" alt="Nina" />
+            </div>
+            <span class="quick-send-name">Nina</span>
+          </div>
+          <div class="quick-send-avatar quick-send-avatar-selected" data-user="kim">
+            <div class="quick-send-avatar-img">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face" alt="Kim" />
+            </div>
+            <span class="quick-send-name">Kim</span>
+          </div>
+          <div class="quick-send-avatar" data-user="john">
+            <div class="quick-send-avatar-img">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="John" />
+            </div>
+            <span class="quick-send-name">John</span>
+          </div>
+          <div class="quick-send-avatar" data-user="nomaa">
+            <div class="quick-send-avatar-img">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Nomaa" />
+            </div>
+            <span class="quick-send-name">Nomaa</span>
+          </div>
+        </div>
       </section>
 
-      <!-- Mid-level Action Menu -->
-      <section class="np-mid-actions">
-        <button class="np-mid-action np-mid-action-animate" data-action="remittance" type="button">
-          <div class="np-mid-action-icon">
-            <img src="${walletIcon}" alt="Remittance" class="np-mid-action-img" />
-          </div>
-          <span class="np-mid-action-label">Remittance</span>
-        </button>
-        <button class="np-mid-action np-mid-action-animate" data-action="transfer" type="button">
-          <div class="np-mid-action-icon">
-            <img src="${dollarReceiveIcon}" alt="Transfer" class="np-mid-action-img" />
-          </div>
-          <span class="np-mid-action-label">Transfer</span>
-        </button>
-        <button class="np-mid-action np-mid-action-animate" data-action="withdraw" type="button">
-          <div class="np-mid-action-icon">
-            <img src="${withdrawIcon}" alt="Withdraw" class="np-mid-action-img" />
-          </div>
-          <span class="np-mid-action-label">Withdraw</span>
-        </button>
-        <button class="np-mid-action np-mid-action-animate" data-action="topup" type="button">
-          <div class="np-mid-action-icon">
-            <img src="${topUpIcon}" alt="Top-up" class="np-mid-action-img" />
-          </div>
-          <span class="np-mid-action-label">Top-up</span>
-        </button>
-      </section>
-
-      <!-- Recent Transactions Container -->
-      <section class="recentTransactionsContainer">
-        <div class="recentTransactionsHeader">
-          <h2 class="recentTransactionsTitle">Recent Transactions</h2>
-          <a href="#/transactions" class="recentTransactionsSeeAll">See all</a>
+      <!-- Transactions Card -->
+      <section class="transactions-card">
+        <div class="transactions-header">
+          <h2 class="transactions-title">Transactions</h2>
+          <button class="transactions-filter-icon" type="button" aria-label="Filter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <span class="filter-label">Filter</span>
+          </button>
         </div>
-        <div class="recentTransactionsList" id="txList"></div>
-      </section>
-
-      <!-- Floating Action Button -->
-      <button class="fab" id="fabAdd" title="Scan QR">
-        <div class="fab-icon-wrapper">
-          <img src="${qrScanIcon}" alt="Scan QR" class="fab-icon" />
+        
+        <!-- Filter Pills Row -->
+        <div class="transactions-pills">
+          <button class="transactions-pill transactions-pill-active" data-filter="all">All</button>
+          <button class="transactions-pill" data-filter="spendings">Spendings</button>
+          <button class="transactions-pill" data-filter="earnings">Earnings</button>
         </div>
-      </button>
-
-      <!-- Bottom Navigation -->
-      <nav class="bottom-nav">
-        <button class="nav-item nav-item-home nav-item-active" type="button">
-          <div class="nav-item-icon">
-            <img src="${homeIcon}" alt="Home" class="nav-item-icon-img" />
+        
+        <!-- Transaction List -->
+        <div class="transactions-list" id="transactionsList">
+          <div class="transaction-item">
+            <div class="transaction-icon transaction-icon-shopping">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+            </div>
+            <div class="transaction-details">
+              <span class="transaction-name">Shopping</span>
+              <span class="transaction-time">Today, 3:14 pm</span>
+            </div>
+            <span class="transaction-amount transaction-amount-negative">-$125</span>
           </div>
-          <span>Home</span>
-        </button>
-
-        <button class="nav-item nav-item-statistics" type="button">
-          <div class="nav-item-icon">
-            <img src="${statisticsIcon}" alt="Finances" class="nav-item-icon-img" />
+          
+          <div class="transaction-item">
+            <div class="transaction-icon transaction-icon-person">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop&crop=face" alt="Helen T." />
+            </div>
+            <div class="transaction-details">
+              <span class="transaction-name">Helen T.</span>
+              <span class="transaction-time">Today, 8:09 am</span>
+            </div>
+            <span class="transaction-amount transaction-amount-positive">+$38.6</span>
           </div>
-          <span>Finances</span>
-        </button>
-
-        <div class="nav-item nav-item-spacer" aria-hidden="true"></div>
-
-        <button class="nav-item nav-item-cards" type="button">
-          <div class="nav-item-icon">
-            <img src="${cardsIcon}" alt="Cards" class="nav-item-icon-img" />
+          
+          <div class="transaction-item">
+            <div class="transaction-icon transaction-icon-person">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face" alt="Marcus J." />
+            </div>
+            <div class="transaction-details">
+              <span class="transaction-name">Marcus J.</span>
+              <span class="transaction-time">Yesterday, 3:21 pm</span>
+            </div>
+            <span class="transaction-amount transaction-amount-negative">-$72</span>
           </div>
-          <span>Cards</span>
-        </button>
-
-        <button class="nav-item nav-item-settings" type="button">
-          <div class="nav-item-icon">
-            <img src="${settingsIcon}" alt="Settings" class="nav-item-icon-img" />
-          </div>
-          <span>Settings</span>
-        </button>
-      </nav>
-      <div class="home-indicator" aria-hidden="true"></div>
+        </div>
+      </section>
     </div>
   `;
-  
-  // Bind FAB button
-  on('click', '#fabAdd', () => {
-    navigate('/scan-qr');
+
+  // Event Listeners
+  on('click', '#walletBell', () => navigate('/notifications', { animate: 'slide-right-fade' }));
+  on('click', '#walletAvatar', () => navigate('/change-profile-picture'));
+  on('click', '#actionTransfer', () => navigate('/transfers'));
+  on('click', '#actionWithdraw', () => navigate('/withdraw'));
+  on('click', '#actionMenu', () => navigate('/remittance', { animate: 'slide-right-fade' }));
+
+  // Quick send avatar clicks
+  on('click', '.quick-send-avatar', (e) => {
+    const avatar = e.target.closest('.quick-send-avatar');
+    if (avatar) {
+      const user = avatar.dataset.user;
+      navigate(`/transfers?to=${user}`);
+    }
   });
 
-  // Notifications bell
-  on('click', '.np-bell-btn', () => {
-    navigate('/notifications', { animate: 'slide-right-fade' });
+  // Transaction filter pills
+  on('click', '.transactions-pill', (e) => {
+    const pills = document.querySelectorAll('.transactions-pill');
+    pills.forEach(p => p.classList.remove('transactions-pill-active'));
+    e.target.classList.add('transactions-pill-active');
   });
 
-  // Main send/receive actions
-  on('click', '.np-main-action-send', () => {
-    navigate('/transfers');
-  });
-
-  on('click', '.np-main-action-receive', () => {
-    navigate('/add-money');
-  });
-
-  // Avatar -> Change Profile Picture
-  on('click', '.np-avatar-circle', () => {
-    navigate('/change-profile-picture');
-  });
-
-  // Insight card dismiss
-  on('click', '.np-insight-close', () => {
-    const card = qs('.np-insight-card');
-    if (card) card.style.display = 'none';
-  });
-  
-  // Bind quick actions
-  on('click', '[data-action="remittance"]', () => navigate('/remittance', { animate: 'slide-right-fade' }));
-  on('click', '[data-action="transfer"]', () => navigate('/transfers'));
-  on('click', '[data-action="withdraw"]', () => navigate('/withdraw'));
-  on('click', '[data-action="topup"]', () => navigate('/network-selection', { animate: 'slide-right-fade' }));
-
-  // Bottom navigation
-  on('click', '.nav-item-home', () => {
-    navigate('/dashboard');
-  });
-
-  on('click', '.nav-item-statistics', () => {
-    navigate('/finances');
-  });
-
-  on('click', '.nav-item-cards', () => {
-    navigate('/card');
-  });
-
-  on('click', '.nav-item-settings', () => {
-    navigate('/settings');
-  });
-
-  // Load data after render
-  loadBalancesAndActivity();
+  // Load balance data
+  loadWalletData();
 }
 
-// ---------- helpers ----------
-
-// Main send/receive actions
-on('click', '.np-main-action-send', () => {
-  navigate('/transfers');
-});
-
-on('click', '.np-main-action-receive', () => {
-  navigate('/add-money');
-});
-
-// Avatar -> Change Profile Picture
-on('click', '.np-avatar-circle', () => {
-  navigate('/change-profile-picture');
-});
-
-// Insight card dismiss
-on('click', '.np-insight-close', () => {
-  const card = qs('.np-insight-card');
-  if (card) card.style.display = 'none';
-});
-
-// Bind quick actions
-on('click', '[data-action="remittance"]', () => navigate('/remittance', { animate: 'slide-right-fade' }));
-on('click', '[data-action="transfer"]', () => navigate('/transfers'));
-on('click', '[data-action="withdraw"]', () => navigate('/withdraw'));
-on('click', '[data-action="topup"]', () => navigate('/network-selection', { animate: 'slide-right-fade' }));
-
-// Bottom navigation
-on('click', '.nav-item-home', () => {
-  navigate('/dashboard');
-});
-
-on('click', '.nav-item-statistics', () => {
-  navigate('/finances');
-});
-
-on('click', '.nav-item-cards', () => {
-  navigate('/card');
-});
-
-on('click', '.nav-item-settings', () => {
-  navigate('/settings');
-});
-
-// Load data after render
-function fmt(n) { return (Number(n || 0) / 100).toFixed(2); }
-function prettyTime(iso) { return new Date(iso).toLocaleString(); }
-function capitalize(s){ try { return s.charAt(0).toUpperCase() + s.slice(1); } catch { return s; } }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
-
-async function loadBalancesAndActivity() {
-  const balanceEl = qs('#wallet-balance');
-  const txList = qs('#txList');
-  const cashflowAmountEl = qs('#weekly-cashflow-amount');
-  const cashflowPercentEl = qs('#weekly-cashflow-percent');
+async function loadWalletData() {
+  const balanceEl = qs('#walletBalance');
+  const positiveEl = qs('#positiveChange');
+  const negativeEl = qs('#negativeChange');
 
   try {
     const [bals, txs] = await Promise.all([
@@ -308,199 +257,43 @@ async function loadBalancesAndActivity() {
       api('/wallet/transactions').catch(() => [])
     ]);
 
-    const totalUSD = (Number(bals.JMD || 0) / 15500) + (Number(bals.USD || 0) / 100);
+    // Calculate total balance in USD
+    const jmdInUsd = (Number(bals.JMD || 0) / 100) / 155;
+    const usd = Number(bals.USD || 0) / 100;
+    const total = jmdInUsd + usd;
+
     if (balanceEl) {
-      balanceEl.textContent = `$ ${totalUSD.toFixed(2)}`;
+      const formatted = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const [dollars, cents] = formatted.split('.');
+      balanceEl.innerHTML = `$${dollars}<span class="wallet-balance-cents">.${cents}</span>`;
     }
 
-    if (!txs || !txs.length) {
-      txList.innerHTML = renderDemoTransactions();
-      updateWeeklyCashflowInsight(renderDemoWeeklyCashflow());
-    } else {
-      // Sort transactions by timestamp in descending order (newest first)
-      const sortedTxs = [...txs].sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+    // Calculate weekly changes
+    if (txs && txs.length > 0) {
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      let positiveTotal = 0;
+      let negativeTotal = 0;
+
+      txs.forEach(tx => {
+        const txDate = new Date(tx.createdAt);
+        if (txDate >= weekAgo) {
+          const amt = Number(tx.amount || 0) / 100;
+          if (tx.kind === 'DEPOSIT' || tx.kind === 'RECEIVE' || tx.kind === 'P2P_RECV') {
+            positiveTotal += amt;
+          } else {
+            negativeTotal += amt;
+          }
+        }
       });
-      
-      // Render only the 5 most recent transactions
-      txList.innerHTML = sortedTxs.slice(0, 5).map(tx => renderTransaction(tx)).join('');
-      updateWeeklyCashflowInsight(calculateWeeklyCashflow(txs));
+
+      if (positiveEl) positiveEl.textContent = `+${positiveTotal.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+      if (negativeEl) negativeEl.textContent = `-${negativeTotal.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
     }
 
   } catch (e) {
-    console.error('[DASHBOARD]', e);
-    if (balanceEl) {
-      balanceEl.textContent = '$ 0.00';
-    }
-    if (txList) {
-      txList.innerHTML = renderDemoTransactions();
-    }
-    updateWeeklyCashflowInsight(renderDemoWeeklyCashflow());
-  }
-}
-
-function updateWeeklyCashflowInsight(cashflowData) {
-  const { difference, percentChange, isPositive } = cashflowData;
-  const cashflowAmountEl = qs('#weekly-cashflow-amount');
-  const cashflowPercentEl = qs('#weekly-cashflow-percent');
-  
-  if (cashflowAmountEl) {
-    const prefix = isPositive ? '+' : '';
-    const formattedAmount = Math.abs(difference).toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-    cashflowAmountEl.textContent = `${prefix}$${formattedAmount}`;
-    cashflowAmountEl.style.color = isPositive ? '#00C853' : '#D32F2F';
-  }
-  
-  if (cashflowPercentEl) {
-    const percentPrefix = isPositive ? '+' : '';
-    cashflowPercentEl.textContent = `${percentPrefix}${percentChange.toFixed(1)}% vs last week`;
-    cashflowPercentEl.style.color = isPositive ? '#00C853' : '#D32F2F';
-  }
-}
-
-function renderDemoWeeklyCashflow() {
-  // Demo data for the insight card
-  const difference = 11000;
-  const percentChange = 110;
-  const isPositive = true;
-  
-  return { difference, percentChange, isPositive };
-}
-
-function renderTransaction(tx) {
-  const isPositive = tx.kind === 'DEPOSIT' || tx.kind === 'RECEIVE';
-  const amountClass = isPositive ? 'np-tx-amount-positive' : 'np-tx-amount-negative';
-  const amountPrefix = isPositive ? '+ ' : '- ';
-  const amount = fmt(tx.amount);
-
-  const companyRaw = tx.merchant || tx.counterparty || formatTransactionLabel(tx.kind);
-  const descriptionRaw = tx.description || tx.reference || 'Pro Subscription';
-  const time = formatTime(tx.createdAt);
-
-  const company = escapeHtml(companyRaw || '');
-  const description = escapeHtml(descriptionRaw || '');
-
-  let iconSrc = null;
-  if (/flow/i.test(companyRaw || '')) {
-    iconSrc = flowAvatar;
-  } else if (/western/i.test(companyRaw || '')) {
-    iconSrc = wuAvatar;
-  } else if (/pricemart/i.test(companyRaw || '')) {
-    iconSrc = pricemartAvatar;
-  }
-
-  const statusClass = isPositive ? 'np-tx-status-positive' : 'np-tx-status-negative';
-
-  return `
-    <div class="np-tx-row">
-      <div class="np-tx-icon">
-        ${iconSrc ? `<img src="${iconSrc}" alt="${company}" class="np-tx-icon-img" />` : ''}
-      </div>
-      <div class="np-tx-main">
-        <div class="np-tx-company">${company}</div>
-        <div class="np-tx-desc-row">
-          <div class="np-tx-desc">${description}</div>
-          <span class="np-tx-status ${statusClass}"></span>
-        </div>
-      </div>
-      <div class="np-tx-meta">
-        <div class="np-tx-amount ${amountClass}">${amountPrefix}$${amount}</div>
-        <div class="np-tx-time">${time}</div>
-      </div>
-    </div>
-  `;
-}
-
-function renderDemoTransactions() {
-  const now = new Date().toISOString();
-  // Create timestamps for different times
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  
-  const demoTxs = [
-    {
-      kind: 'BILL',
-      merchant: 'Flow Ltd',
-      description: 'Pro Subscription',
-      createdAt: now,
-      amount: 120000,
-    },
-    {
-      kind: 'RECEIVE',
-      merchant: 'Western Union',
-      description: 'Money Transfer',
-      createdAt: now,
-      amount: 780000,
-    },
-    {
-      kind: 'BILL',
-      merchant: 'Pricemart',
-      description: 'Grocery Shopping',
-      createdAt: yesterday.toISOString(),
-      amount: 540000,
-    },
-    {
-      kind: 'TRANSFER',
-      merchant: 'John Smith',
-      description: 'Payment',
-      createdAt: yesterday.toISOString(),
-      amount: 250000,
-    },
-    {
-      kind: 'BILL',
-      merchant: 'Amazon',
-      description: 'Online Purchase',
-      createdAt: twoDaysAgo.toISOString(),
-      amount: 189500,
-    },
-  ];
-
-  // Sort demo transactions by timestamp in descending order (newest first)
-  const sortedDemoTxs = [...demoTxs].sort((a, b) => {
-    return new Date(b.createdAt) - new Date(a.createdAt);
-  });
-  
-  return sortedDemoTxs.map(tx => renderTransaction(tx)).join('');
-}
-
-function getTransactionIcon(kind) {
-  const icons = {
-    DEPOSIT: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',
-    WITHDRAW: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
-    TRANSFER: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>',
-    BILL: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>'
-  };
-  return icons[kind] || icons.TRANSFER;
-}
-
-function formatTransactionLabel(kind) {
-  const labels = {
-    DEPOSIT: 'Deposit',
-    WITHDRAW: 'Withdrawal',
-    TRANSFER: 'Transfer',
-    BILL: 'Bill Payment',
-    RECEIVE: 'Received'
-  };
-  return labels[kind] || kind;
-}
-
-function formatTime(iso) {
-  try {
-    const date = new Date(iso);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    
-    if (diffMins < 60) return `${diffMins} mins ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)} hours ago`;
-    
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  } catch {
-    return 'Recently';
+    console.error('[WALLET DASHBOARD]', e);
+    // Keep demo values on error
   }
 }

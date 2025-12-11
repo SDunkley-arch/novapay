@@ -1,93 +1,17 @@
-// Landing page component (React)
-import logo from '../../assets/NP_Logo2.png';
-import wordLogo from '../../assets/NP_WOrds.png';
+// Landing page component (React) - Redesigned with Novapay branding
 import { motion } from 'motion/react';
+import landingBg from '../../assets/landing-bg.png';
+import heroIllustration from '../../assets/hero-illustration.png';
 
 const COLORS = {
-  primary: '#543AF8',
-  secondaryBg: '#EFF6FF',
-  textDark: '#141414',
-  textMuted: '#1A1C1E',
-  homeIndicator: '#141414',
+  accent: '#A45CFF',
+  textDark: '#111111',
+  textMuted: '#7A7A7A',
+  white: '#FFFFFF',
+  lavenderGlow: '#E7D9FF',
+  lavenderLight: '#F5F0FF',
 };
 
-function StatusBar() {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 44,
-        padding: '12px 18px 0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        fontSize: 12,
-        color: COLORS.textDark,
-      }}
-    >
-      <div>9:41</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1.5 }}>
-          {[4, 6, 8, 10].map((h) => (
-            <div
-              key={h}
-              style={{
-                width: 2,
-                height: h,
-                borderRadius: 1,
-                backgroundColor: COLORS.textDark,
-              }}
-            />
-          ))}
-        </div>
-        <div
-          style={{
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            border: `2px solid ${COLORS.textDark}`,
-            borderTop: 'none',
-            borderLeft: 'none',
-            transform: 'rotate(45deg)',
-            boxSizing: 'border-box',
-          }}
-        />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <div
-            style={{
-              width: 18,
-              height: 10,
-              borderRadius: 3,
-              border: `1.5px solid ${COLORS.textDark}`,
-              padding: 1.5,
-              boxSizing: 'border-box',
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 2,
-                backgroundColor: COLORS.textDark,
-              }}
-            />
-          </div>
-          <div
-            style={{
-              width: 2,
-              height: 6,
-              borderRadius: 1,
-              backgroundColor: COLORS.textDark,
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function LandingScreen({ onSignIn, onRegister }) {
   return (
@@ -97,141 +21,278 @@ function LandingScreen({ onSignIn, onRegister }) {
         height: '100%',
         margin: 0,
         padding: 0,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: COLORS.white,
         position: 'relative',
         fontFamily:
-          "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+          "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
         color: COLORS.textDark,
         overflow: 'hidden',
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
 
-      <motion.div
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
+
+      {/* Hero background image */}
+      <div
         style={{
           position: 'absolute',
-          top: 120,
+          top: 0,
           left: 0,
           right: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 16,
+          bottom: 0,
+          backgroundImage: `url(${landingBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Logo area */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        style={{
+          position: 'relative',
+          marginTop: 'max(24px, env(safe-area-inset-top, 24px))',
+          marginLeft: 28,
+          zIndex: 1,
         }}
       >
-        <motion.img
-          src={logo}
-          alt="NovaPay logo"
-          initial={{ opacity: 0.6 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+        <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+          <span
+            style={{
+              fontSize: 26,
+              letterSpacing: '-0.5px',
+              color: COLORS.textDark,
+            }}
+          >
+            <span style={{ fontWeight: 300 }}>Nova</span>
+            <span style={{ fontWeight: 600 }}>pay</span>
+          </span>
+          {/* Accent corner glyph */}
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              marginLeft: 2,
+              marginTop: 2,
+              borderTop: `2px solid ${COLORS.accent}`,
+              borderRight: `2px solid ${COLORS.accent}`,
+            }}
+          />
+        </div>
+      </motion.div>
+
+      {/* Hero illustration */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '16px 20px',
+          zIndex: 1,
+        }}
+      >
+        <img
+          src={heroIllustration}
+          alt="Financial wellness illustration"
           style={{
-            width: 230,
-            height: 200,
-            objectFit: 'contain',
-          }}
-        />
-        <motion.img
-          src={wordLogo}
-          alt="NovaPay text"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          style={{
-            width: 240,
-            marginTop: 0,
+            width: '85%',
+            maxWidth: 320,
+            height: 'auto',
             objectFit: 'contain',
           }}
         />
       </motion.div>
 
+      {/* Main content area */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.35, ease: 'easeOut' }}
+        transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
         style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 64,
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          gap: 16,
+          justifyContent: 'center',
+          paddingLeft: 28,
+          paddingRight: 28,
+          zIndex: 1,
         }}
       >
+        {/* Section tag */}
         <div
           style={{
-            display: 'flex',
-            width: 280,
-            height: 52,
-            borderRadius: 14,
-            backgroundColor: COLORS.secondaryBg,
-            padding: 4,
-            boxSizing: 'border-box',
+            fontSize: 13,
+            fontWeight: 500,
+            color: COLORS.accent,
+            marginBottom: 16,
+            textTransform: 'lowercase',
           }}
         >
-          <button
-            type="button"
-            data-testid="btnCreateAccount"
-            onClick={onRegister}
-            style={{
-              flex: 1,
-              border: 'none',
-              borderRadius: 14,
-              backgroundColor: COLORS.primary,
-              color: '#FFFFFF',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Register
-          </button>
+          control your budget
+        </div>
+
+        {/* Main headline */}
+        <h1
+          style={{
+            margin: 0,
+            fontSize: 48,
+            fontWeight: 700,
+            lineHeight: 1.05,
+            letterSpacing: '-1px',
+          }}
+        >
+          <span style={{ color: COLORS.textDark }}>Your</span>
+          <br />
+          <span style={{ color: COLORS.textDark }}>Money</span>
+          <br />
+          <span style={{ color: COLORS.accent }}>Instantly.</span>
+        </h1>
+
+        {/* Supporting description */}
+        <p
+          style={{
+            marginTop: 20,
+            marginBottom: 0,
+            fontSize: 15,
+            fontWeight: 400,
+            color: COLORS.textMuted,
+            lineHeight: 1.5,
+            maxWidth: 280,
+          }}
+        >
+          Track the money you spend with friends & brands
+        </p>
+      </motion.div>
+
+      {/* Frosted glass bottom panel */}
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+        style={{
+          position: 'relative',
+          margin: '0 16px',
+          marginBottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
+          zIndex: 2,
+        }}
+      >
+        {/* Abstract blurred purple shapes behind the panel */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 20,
+            left: '20%',
+            width: 100,
+            height: 100,
+            background: `radial-gradient(circle, ${COLORS.accent}30 0%, transparent 70%)`,
+            filter: 'blur(30px)',
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 40,
+            right: '15%',
+            width: 80,
+            height: 80,
+            background: `radial-gradient(circle, ${COLORS.lavenderGlow}50 0%, transparent 70%)`,
+            filter: 'blur(25px)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Frosted panel */}
+        <div
+          style={{
+            position: 'relative',
+            backgroundColor: 'rgba(255, 255, 255, 0.80)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            borderRadius: 30,
+            padding: '28px 24px 24px',
+            boxShadow: '0 18px 40px rgba(0, 0, 0, 0.12)',
+            // Inner glow effect on top edge
+            border: '1px solid rgba(255, 255, 255, 0.6)',
+          }}
+        >
+          {/* Sign In button - centered pill */}
           <button
             type="button"
             data-testid="btnSignIn"
             onClick={onSignIn}
             style={{
-              flex: 1,
+              width: '100%',
+              height: 56,
               border: 'none',
-              borderRadius: 14,
-              backgroundColor: COLORS.secondaryBg,
-              color: COLORS.primary,
-              fontSize: 14,
-              fontWeight: 500,
+              borderRadius: 28,
+              backgroundColor: COLORS.textDark,
+              color: COLORS.white,
+              fontSize: 16,
+              fontWeight: 600,
               cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: 'inherit',
+              transition: 'transform 0.15s ease, opacity 0.15s ease',
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'scale(0.98)';
+              e.currentTarget.style.opacity = '0.9';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.opacity = '1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.opacity = '1';
             }}
           >
             Sign In
           </button>
-        </div>
 
-        <div
-          style={{
-            fontSize: 12,
-            color: COLORS.textMuted,
-          }}
-        >
-          Powered by Nium
+          {/* Bottom text */}
+          <div
+            style={{
+              marginTop: 20,
+              textAlign: 'center',
+              fontSize: 14,
+              color: COLORS.textMuted,
+            }}
+          >
+            Don't have an account?{' '}
+            <button
+              type="button"
+              data-testid="btnCreateAccount"
+              onClick={onRegister}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: COLORS.accent,
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: 'pointer',
+                padding: 0,
+                fontFamily: 'inherit',
+              }}
+            >
+              Create one
+            </button>
+          </div>
         </div>
       </motion.div>
 
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          bottom: 'calc(8px + env(safe-area-inset-bottom))',
-          transform: 'translateX(-50%)',
-          width: 134,
-          height: 5,
-          borderRadius: 999,
-          backgroundColor: COLORS.homeIndicator,
-        }}
-      />
+
     </div>
   );
 }

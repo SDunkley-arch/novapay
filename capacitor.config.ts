@@ -5,14 +5,14 @@ const config: CapacitorConfig = {
   appName: 'NovaPay Ja',
   // Built web assets for the app live in the monorepo frontend/dist folder
   webDir: 'frontend/dist',
-  server: {
-    // When using live dev server, point Android to the dev server on your LAN.
-    // For a physical device on the same Wi‑Fi, this should be the host machine's IP.
-    // Update this if your LAN IP or dev port changes.
-    url: 'http://192.168.0.5:8080',
-    androidScheme: 'http',
-    cleartext: true,
-  },
+  // server: {
+  //   // When using live dev server, point Android to the dev server on your LAN.
+  //   // For a physical device on the same Wi‑Fi, this should be the host machine's IP.
+  //   // Update this if your LAN IP or dev port changes.
+  //   url: 'http://192.168.0.5:8080',
+  //   androidScheme: 'http',
+  //   cleartext: true,
+  // },
   android: {
     // Ensure the app uses the full screen
     backgroundColor: '#000000'

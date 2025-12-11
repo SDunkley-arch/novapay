@@ -27,7 +27,8 @@ export const state = {
     masked: '•••• 1234', 
     expiry: '12/28', 
     frozen: false,
-    linkedAccounts: []
+    linkedAccounts: [],
+    savedCards: []
   }
 };
 
@@ -85,6 +86,9 @@ export function load() {
     const card = localStorage.getItem(STORAGE_KEYS.CARD);
     if (card) {
       state.card = JSON.parse(card);
+      if (!Array.isArray(state.card.savedCards)) {
+        state.card.savedCards = [];
+      }
     }
   } catch (error) {
     console.error('Error loading state:', error);
@@ -186,7 +190,7 @@ export function clearSession() {
     state.txs = [];
     state.notifications = [];
     state.savedBillers = [];
-    state.card = { hasCard: false, masked: '', expiry: '', frozen: false, linkedAccounts: [] };
+    state.card = { hasCard: false, masked: '', expiry: '', frozen: false, linkedAccounts: [], savedCards: [] };
 
     // Clear all persistent data
     clearStorage();

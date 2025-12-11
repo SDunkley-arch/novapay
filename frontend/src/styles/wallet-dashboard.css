@@ -1,0 +1,532 @@
+/* ============================================
+   WALLET DASHBOARD - Premium Fintech Design
+   ============================================ */
+
+.wallet-dashboard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-height: var(--app-height, 100vh);
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #F8F9FB;
+    /* Light gray background for cards to sit on */
+    padding-bottom: 40px;
+}
+
+/* Background with frosted overlay - Extended Height with Round Bottom */
+.wallet-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 520px;
+    /* Extended height to cover balance + key actions */
+    z-index: 0;
+    border-radius: 0 0 40px 40px;
+    /* Large iOS-style bottom radius */
+    overflow: hidden;
+    background: linear-gradient(135deg, #EAD6EE 0%, #A0F1EA 100%);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.wallet-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/dashboard-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    /* Optimize performance */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.wallet-bg-frost {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    /* Optimize performance */
+    transform: translateZ(0);
+}
+
+/* Main content container */
+.wallet-content {
+    position: relative;
+    z-index: 10;
+    padding: 0 0px;
+    height: 520px;
+    /* Match bg height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.wallet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 24px 20px;
+}
+
+.wallet-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wallet-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #EFEFEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.wallet-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wallet-avatar-initials {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.wallet-greeting {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111111;
+}
+
+.wallet-bell {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.wallet-bell:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.wallet-bell svg {
+    color: #111111;
+}
+
+.wallet-bell-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #FF3B30;
+    border-radius: 50%;
+    border: 1px solid #FFFFFF;
+}
+
+/* Balance Section */
+.wallet-balance-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 80px;
+    /* Space for action bar */
+}
+
+.wallet-balance-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0 0 8px;
+}
+
+.wallet-balance-amount {
+    font-size: 42px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 16px;
+    letter-spacing: -1px;
+}
+
+.wallet-balance-cents {
+    font-size: 32px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.wallet-indicators {
+    display: flex;
+    gap: 16px;
+}
+
+.wallet-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.wallet-indicator-positive {
+    color: #008751;
+}
+
+.wallet-indicator-negative {
+    color: #D32F2F;
+}
+
+/* Action Bar (Floating Pill) */
+.wallet-action-bar {
+    position: absolute;
+    bottom: 32px;
+    /* Positioned inside the rounded bg */
+    left: 20px;
+    right: 20px;
+    z-index: 20;
+}
+
+.wallet-action-bar-inner {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    /* Stronger shadow for floating feel */
+    gap: 8px;
+}
+
+.wallet-action {
+    flex: 1;
+    display: flex;
+    /* Pill shape button */
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    background: #1C1C1E;
+    /* Dark pill */
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.wallet-action:active {
+    transform: scale(0.98);
+}
+
+.wallet-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+}
+
+.wallet-action-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.wallet-action-grid {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #1C1C1E;
+    cursor: pointer;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle separator */
+}
+
+
+/* ============================================
+   CARD CONTAINERS (iOS Style)
+   ============================================ */
+.quick-send-card,
+.transactions-card {
+    background: #FFFFFF;
+    border-radius: 28px;
+    padding: 24px;
+    margin: 0 20px 20px;
+    /* Side margins and bottom spacing */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* QUICK SEND CARD */
+.quick-send-card {
+    margin-top: -20px;
+    /* Slight overlap or pull-up if needed, or just regular flow */
+    position: relative;
+    z-index: 10;
+}
+
+.quick-send-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.quick-send-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.quick-send-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.quick-send-count {
+    font-size: 15px;
+    font-weight: 600;
+    color: #A45CFF;
+}
+
+.quick-send-menu {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.quick-send-avatars {
+    display: flex;
+    justify-content: space-between;
+    /* Space out evenly */
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+
+.quick-send-avatars::-webkit-scrollbar {
+    display: none;
+}
+
+.quick-send-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    min-width: 60px;
+}
+
+.quick-send-avatar-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    /* Softer shadow */
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.quick-send-avatar-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.quick-send-avatar-selected .quick-send-avatar-img {
+    border-color: #A45CFF;
+    box-shadow: 0 4px 14px rgba(164, 92, 255, 0.3);
+}
+
+.quick-send-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333333;
+}
+
+/* TRANSACTIONS CARD */
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.transactions-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0;
+}
+
+.transactions-filter-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666666;
+    cursor: pointer;
+}
+
+.transactions-pills {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.transactions-pill {
+    padding: 8px 18px;
+    border-radius: 20px;
+    /* Fully rounded pills */
+    border: 1px solid #EAEAEA;
+    background: #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666666;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.transactions-pill-active {
+    background: #111111;
+    /* Dark active state like reference */
+    color: #FFFFFF;
+    border-color: #111111;
+}
+
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* More spacing between items */
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.transaction-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.transaction-icon-shopping {
+    background: #FFF0E6;
+    /* Light orange bg */
+}
+
+.transaction-icon-shopping svg {
+    stroke: #FF8533;
+    /* Orange icon */
+}
+
+.transaction-icon-person {
+    background: #F3F4F6;
+}
+
+.transaction-icon-person img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.transaction-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.transaction-name {
+    font-size: 16px;
+    font-weight: 600;
+    /* Bold primary text */
+    color: #111111;
+}
+
+.transaction-time {
+    font-size: 13px;
+    font-weight: 500;
+    color: #999999;
+    /* Gray secondary text */
+}
+
+.transaction-amount {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: right;
+}
+
+.transaction-amount-negative {
+    color: #111111;
+}
+
+.transaction-amount-positive {
+    color: #00C853;
+    /* Green for positive */
+}
+
+/* Bottom Navigation Bar - preserve existing styles (hidden if JS removes it) */
+.wallet-dashboard .bottomNavBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}

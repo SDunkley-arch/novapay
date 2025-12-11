@@ -298,7 +298,7 @@ app.post("/bills/pay", auth, async (req, res) => {
 // ==============================
 // 🚀 Start Server
 // ==============================
-const port = Number(process.env.PORT || 4000);
+const port = 3000; // Force 3000 to bypass .env issue
 const host = process.env.HOST || "0.0.0.0";
 
 app.listen(port, host, () => {

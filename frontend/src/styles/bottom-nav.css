@@ -1,0 +1,212 @@
+/* Bottom Navigation Bar - Figma Mock Implementation */
+
+/* Main container */
+.bottomNavBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 116px;
+  z-index: 1200; /* Increased z-index to be above Recent Transactions */
+  background-color: #FFFFFF; /* Solid white background */
+  box-shadow: 0 -4px 30px rgba(2, 41, 100, 0.18); /* Shadow for elevation */
+  border-radius: 24px 24px 0 0; /* Rounded top corners */
+}
+
+/* Concave notch for QR button using pseudo-element */
+.bottomNavBar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-color: transparent;
+  /* SVG path for the concave notch */
+  /* The path draws a shape with a concave notch in the center top */
+  /* Starting from top-left, moving right, then creating the notch, then continuing right, and back to start */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='375' height='116' viewBox='0 0 375 116' fill='none'%3E%3Cpath d='M0 24C0 10.7452 10.7452 0 24 0H155C155 0 155 0 155 0V0C155 19.33 169.67 36 187.5 36C205.33 36 220 19.33 220 0V0C220 0 220 0 220 0H351C364.255 0 375 10.7452 375 24V116H0V24Z' fill='white'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+/* Tab bar container */
+.tab-bar-container {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  right: 0;
+  height: 49px;
+  width: 100%;
+}
+
+/* Navigation tabs */
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 76px;
+  height: 49px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tab positioning - using absolute positioning with specific offsets */
+.nav-tab-home {
+  left: calc(50% - 151.5px);
+  transform: translateX(-50%);
+}
+
+.nav-tab-finances {
+  left: calc(50% - 75.5px);
+  transform: translateX(-50%);
+}
+
+.nav-tab-cards {
+  left: calc(50% + 74.5px);
+  transform: translateX(-50%);
+}
+
+.nav-tab-settings {
+  left: calc(50% + 148.5px);
+  transform: translateX(-50%);
+}
+
+/* Tab icons */
+.nav-tab-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  transform: translateX(-50%);
+}
+
+.nav-tab-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(52%) sepia(6%) saturate(257%) hue-rotate(182deg) brightness(91%) contrast(86%);
+  transition: filter 0.2s ease;
+}
+
+/* Tab labels */
+.nav-tab-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #7B7D82;
+  transition: color 0.2s ease;
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  display: none;
+}
+
+/* Active tab state */
+.nav-tab-active .nav-tab-icon-img {
+  filter: brightness(0) saturate(100%);
+}
+
+.nav-tab-active .nav-tab-label {
+  color: #000000;
+}
+
+/* QR Scan button */
+.qr-scan-button {
+  position: absolute;
+  left: 50%;
+  top: -4px; /* Position 4px above the flat portion of the nav bar */
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%; /* Make it a perfect circle */
+  border: none;
+  background: #06a3ff;
+  padding: 0;
+  margin: 0;
+  z-index: 1300; /* Ensure it's above the nav bar */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(2, 41, 100, 0.3); /* Add shadow to the QR button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-scan-button:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+.qr-scan-button:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+.qr-scan-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Safe area insets for devices with notches */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottomNavBar {
+    height: calc(116px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom); /* Add padding inside the nav bar */
+    background-color: #ffffff; /* Ensure the padding area is white */
+  }
+}
+
+/* Update floating transactions card position to sit above the new nav bar */
+.recentTransactionsCard {
+  bottom: 116px; /* Match the height of the bottom nav bar */
+}
+
+@supports (bottom: env(safe-area-inset-bottom)) {
+  .recentTransactionsCard {
+    bottom: calc(116px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 374px) {
+  /* For smaller screens, adjust the tab positioning proportionally */
+  .nav-tab-home {
+    left: calc(50% - 130px);
+  }
+  
+  .nav-tab-finances {
+    left: calc(50% - 65px);
+  }
+  
+  .nav-tab-cards {
+    left: calc(50% + 65px);
+  }
+  
+  .nav-tab-settings {
+    left: calc(50% + 130px);
+  }
+}
+
+@media screen and (min-width: 400px) {
+  /* For larger screens, maintain the proportional spacing */
+  .bottomNavBar::before {
+    background-size: 375px 116px;
+    background-position: center top;
+  }
+}
+

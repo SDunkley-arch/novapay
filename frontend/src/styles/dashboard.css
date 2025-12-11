@@ -628,7 +628,7 @@
   height: 100%;
   min-height: 100%;
   background-color: #000000;
-  background-image: url('../../assets/background.png');
+  background-image: url('../../assets/Gradient.png');
   background-repeat: no-repeat;
   background-position: center top;
   background-size: cover;
@@ -667,7 +667,7 @@
 .np-location-label {
   font-size: 12px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .np-location-row {
@@ -679,7 +679,7 @@
 .np-location-value {
   font-size: 15px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .np-location-chevron {
@@ -794,7 +794,7 @@
   font-family: 'Urbanist', 'Poppins', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: #000000;
   margin-bottom: 6px;
 }
 
@@ -802,7 +802,7 @@
   font-family: 'Urbanist', 'Poppins', sans-serif;
   font-size: 40px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .np-main-actions {
@@ -826,7 +826,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: transparent;
+  background: #06a3ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -844,7 +844,7 @@
 .np-main-action-label {
   font-size: 13px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .np-insight-card {
@@ -935,7 +935,7 @@
   width: 48px;
   height: 48px;
   border-radius: 20px;
-  background: #543AF8;
+  background: #06a3ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1007,7 +1007,9 @@
 .np-mid-action-label {
   font-size: 12px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: #000000;
+  z-index: 10;
+  position: relative;
 }
 
 .np-transactions {

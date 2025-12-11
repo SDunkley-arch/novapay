@@ -30,10 +30,12 @@ import { renderRemittanceSuccessScreen } from './components/SuccessScreen.jsx';
 import { renderRemittanceErrorScreen } from './components/ErrorScreen.jsx';
 import { renderChangeProfilePicture } from './pages/change-profile-picture.js';
 import { renderScanQR } from './pages/scan-qr.js';
+import { renderQRScreen } from './pages/qr-screen.js';
 import { renderBankSelection } from './pages/bank-selection.js';
 import { renderBankDetails } from './pages/bank-details.js';
 import { renderNetworkSelection } from './pages/network-selection.js';
 import { renderNetworkDetails } from './pages/network-details.js';
+import { renderReceiveLanding, renderReceiveBankSelection, renderReceiveAddCard } from './pages/receive.js';
 
 class Router {
   constructor() {
@@ -143,7 +145,7 @@ class Router {
         this.redirect(this.defaultRoute);
         return;
       }
-      
+
       // Then check if session has timed out due to inactivity
       if (!checkSessionValidity()) {
         console.warn(`[Router] Protected route "${hash}" blocked — session timed out`);
@@ -153,7 +155,7 @@ class Router {
     }
 
     if (!route.requiresAuth && isLoggedIn() &&
-        (hash === '/login' || hash === '/register' || hash === '/landing' || hash === '/forgot-password' || hash === '/check-email')) {
+      (hash === '/login' || hash === '/register' || hash === '/landing' || hash === '/forgot-password' || hash === '/check-email')) {
       console.log(`[Router] User logged in, redirecting from public route "${hash}" to dashboard`);
       this.redirect(this.authRoute);
       return;
@@ -230,6 +232,9 @@ router.addRoute('/landing', renderLanding);
 router.addRoute('/dashboard', renderDashboard, true);
 router.addRoute('/transfers', renderTransfer, true);
 router.addRoute('/add-money', renderAddMoney, true);
+router.addRoute('/receive', renderReceiveLanding, true);
+router.addRoute('/receive/select-bank', renderReceiveBankSelection, true);
+router.addRoute('/receive/add-card/:bank', (params) => renderReceiveAddCard(params.bank), true);
 router.addRoute('/bills', () => navigate('/more/billers'), true);
 router.addRoute('/withdraw', renderWithdraw, true);
 router.addRoute('/card', renderCard, true);
@@ -238,7 +243,7 @@ router.addRoute('/notifications', renderNotifications, true);
 router.addRoute('/change-profile-picture', renderChangeProfilePicture, true);
 router.addRoute('/transactions', renderTransactions, true);
 router.addRoute('/finances', renderFinances, true);
-router.addRoute('/scan-qr', renderScanQR, true);
+router.addRoute('/scan-qr', renderQRScreen, true);
 router.addRoute('/kyc', renderKYC, true);
 router.addRoute('/settings', renderSettings, true);
 router.addRoute('/personal-info', renderPersonalInfo, true);
@@ -257,6 +262,6 @@ router.addRoute('/network-selection', renderNetworkSelection, true);
 router.addRoute('/network-details/:network', (params) => renderNetworkDetails(params.network), true);
 
 // Defaults
-router.setDefaults('/login', '/dashboard');
+router.setDefaults('/landing', '/dashboard');
 
 console.log('[Router] Routes registered:', Array.from(router.routes.keys()));

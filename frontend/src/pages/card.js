@@ -15,6 +15,67 @@ export function renderCard() {
   }
 }
 
+function renderCurrentCardsSection() {
+  const cards = Array.isArray(state.card.savedCards) ? state.card.savedCards : [];
+  const hasCards = cards.length > 0;
+
+  const rows = hasCards
+    ? cards
+        .map((card, index) => {
+          const label = card.label || 'Saved Card';
+          const last4 = card.last4 || (card.masked ? String(card.masked).slice(-4) : '');
+          const statusText = card.verified ? 'Verified' : 'Awaiting confirmation';
+          const statusClass = card.verified ? 'card-status-pill-success' : 'card-status-pill-pending';
+
+          return `
+            <button
+              type="button"
+              class="current-card-row"
+              data-card-id="${card.id || ''}"
+              data-card-index="${index}"
+            >
+              <div class="current-card-main">
+                <div class="current-card-title">${label}</div>
+                <div class="current-card-subtitle">•••• ${last4}</div>
+              </div>
+              <span class="card-status-pill ${statusClass}">${statusText}</span>
+            </button>
+          `;
+        })
+        .join('')
+    : `
+        <div class="current-card-empty">
+          <p class="current-card-empty-title">No cards added yet</p>
+          <p class="current-card-empty-subtitle">Add a card or get your virtual card to start using NovaPay.</p>
+        </div>
+      `;
+
+  return `
+    <section class="current-cards-section">
+      <h3 class="section-title-sm current-cards-title">Current Cards</h3>
+      <div class="current-cards-list">
+        ${rows}
+      </div>
+    </section>
+    <div class="current-cards-divider"></div>
+    <div class="current-card-modal-backdrop" id="currentCardModal" aria-hidden="true">
+      <div class="current-card-modal" role="dialog" aria-modal="true">
+        <h3 class="current-card-modal-title" id="currentCardModalTitle">Card details</h3>
+        <p class="current-card-modal-masked" id="currentCardModalMasked">&bull;&bull;&bull;&bull; 0000</p>
+        <div class="current-card-modal-status-row">
+          <span class="card-status-pill card-status-pill-pending" id="currentCardModalStatusPill">Awaiting confirmation</span>
+        </div>
+        <button class="btn-primary-modern btn-full current-card-modal-primary" id="currentCardUseBtn">
+          Use this card (coming soon)
+        </button>
+        <button class="btn btn-secondary btn-full current-card-modal-close" id="currentCardCloseBtn">
+          Close
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 function renderGetCard() {
   const app = qs('#app');
   
@@ -31,6 +92,7 @@ function renderGetCard() {
       </div>
       
       <div class="settings-content">
+        ${renderCurrentCardsSection()}
         <div class="settings-group">
           <div class="settings-list">
             <div class="card text-center">
@@ -121,6 +183,7 @@ function renderCardDetails() {
       </div>
       
       <div class="settings-content">
+        ${renderCurrentCardsSection()}
         <!-- Card Display -->
         <div class="card-display">
           <div class="flex justify-between items-start mb-4">
@@ -296,6 +359,69 @@ function setupCardListeners() {
   on(app, '#cardSettings', 'click', () => {
     showToast('Card Settings feature coming soon!', 'info');
   });
+
+  // Current Cards: open detail modal
+  on(app, '.current-card-row', 'click', (event) => {
+    const row = event.target.closest('.current-card-row');
+    if (!row) return;
+
+    const cards = Array.isArray(state.card.savedCards) ? state.card.savedCards : [];
+    const cardId = row.dataset.cardId;
+    const indexAttr = row.dataset.cardIndex;
+
+    let card = null;
+    if (cardId) {
+      card = cards.find((c) => c && c.id === cardId) || null;
+    }
+    if (!card && indexAttr != null) {
+      const idx = Number(indexAttr);
+      if (!Number.isNaN(idx) && cards[idx]) {
+        card = cards[idx];
+      }
+    }
+    if (!card) return;
+
+    const modal = qs('#currentCardModal');
+    const titleEl = qs('#currentCardModalTitle');
+    const maskedEl = qs('#currentCardModalMasked');
+    const statusPill = qs('#currentCardModalStatusPill');
+    if (!modal || !titleEl || !maskedEl || !statusPill) return;
+
+    const label = card.label || 'Saved Card';
+    const last4 = card.last4 || (card.masked ? String(card.masked).slice(-4) : '');
+    const statusText = card.verified ? 'Verified' : 'Awaiting confirmation';
+
+    titleEl.textContent = label;
+    maskedEl.textContent = `•••• ${last4}`;
+    statusPill.textContent = statusText;
+    statusPill.classList.remove('card-status-pill-success', 'card-status-pill-pending');
+    statusPill.classList.add(card.verified ? 'card-status-pill-success' : 'card-status-pill-pending');
+
+    modal.classList.add('is-visible');
+    modal.setAttribute('aria-hidden', 'false');
+  });
+
+  // Current Cards: close modal
+  on(app, '#currentCardCloseBtn', 'click', () => {
+    const modal = qs('#currentCardModal');
+    if (!modal) return;
+    modal.classList.remove('is-visible');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  // Close when tapping backdrop
+  on(app, '#currentCardModal', 'click', (event) => {
+    if (event.target.id !== 'currentCardModal') return;
+    const modal = qs('#currentCardModal');
+    if (!modal) return;
+    modal.classList.remove('is-visible');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+
+  // Use this card (coming soon)
+  on(app, '#currentCardUseBtn', 'click', () => {
+    showToast('Using this card for payments is coming soon!', 'info');
+  });
 }
 
 // Add styles for card actions
@@ -375,6 +501,129 @@ style.textContent = `
     position: relative;
     z-index: 1;
     margin-top: 1.25rem;
+  }
+  
+  .current-cards-section {
+    margin-bottom: 16px;
+  }
+  .current-cards-title {
+    margin-bottom: 8px;
+  }
+  .current-cards-list {
+    border-radius: 16px;
+    background: #FFFFFF;
+    padding: 4px 0;
+  }
+  .current-card-row {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+  .current-card-row + .current-card-row {
+    border-top: 1px solid var(--border);
+  }
+  .current-card-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .current-card-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .current-card-subtitle {
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0.7;
+  }
+  .card-status-pill {
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .card-status-pill-success {
+    background: var(--colorsalertssuccess);
+    color: #FFFFFF;
+  }
+  .card-status-pill-pending {
+    background: #FFF4E5;
+    color: #8A6116;
+  }
+  .current-card-empty {
+    padding: 16px 0;
+    text-align: left;
+  }
+  .current-card-empty-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .current-card-empty-subtitle {
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0.7;
+  }
+  .current-cards-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0 24px;
+  }
+  .current-card-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 60;
+  }
+  .current-card-modal-backdrop.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .current-card-modal {
+    width: 100%;
+    max-width: 480px;
+    background: #FFFFFF;
+    border-radius: 20px 20px 12px 12px;
+    padding: 16px 16px 20px;
+    box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.35);
+  }
+  .current-card-modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .current-card-modal-masked {
+    font-size: 14px;
+    color: var(--text);
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+  .current-card-modal-status-row {
+    margin-bottom: 16px;
+  }
+  .current-card-modal-primary {
+    margin-bottom: 8px;
+  }
+  .current-card-modal-close {
+    display: block;
+    width: 30%;
+    max-width: 220px;
+    margin: 0 auto;
+    text-align: center;
   }
 `;
 document.head.appendChild(style);
